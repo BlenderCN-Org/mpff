@@ -1,6 +1,7 @@
 # MultiPass For Freedom
 
-Pong en réseau local jusqu'à 10 joueurs. Réalisé avec blender et python 3.4
+Pong en réseau local jusqu'à 10 joueurs. Réalisé avec
+[blender](https://www.blender.org/) et [python 3.4](https://www.python.org/)
 
 ![10 joueurs](https://github.com/sergeLabo/MultiPassForFreedom/blob/twisted3/doc/mpff_10.png)
 
@@ -10,11 +11,11 @@ Cette version utilise [twisted](https://twistedmatrix.com/trac/) en python 3
 
 Ce jeu est un exercice sur les réseaux. Un jeu hyper simple créé dans Blender,
 
-et jusqu'à 10 joueurs.
+et jusqu'à 10 joueurs sur un réseau local.
 
-Le jeu dans Blender n'est pas simple. Il comporte 14 scènes, les scènes x_players
-sont construites par copie de la plupart des objets, et un nommage qui permet
-facilement d'accéder aux objets de Blender dans les scripts python.
+Dans cette solution , le jeu dans Blender n'est pas simple. Il comporte 14 scènes,
+les scènes x_players sont construites par copie de la plupart des objets, et un
+nommage qui permet facilement d'accéder aux objets de Blender dans les scripts python.
 
 Les scripts python doivent être créés / modifiés dans un éditeur externe (par exemple Geany)
 et n'ont pas besoin d'être rechagés dans Blender. Seuls 2 scripts sont chargés
