@@ -1,7 +1,26 @@
-.DS_Store
-applet
-application.linux32
-application.linux64
-application.windows32
-application.windows64
-application.macosx
+# Geany
+*.geany
+
+# Python test
+*_old.py
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# GitEye
+target/
+/.project
+*.project
+
+# Blender
+*.blend1
+*.blend2
+*.blend3
+*.blend4
+*.blend5
+*_old.blend
+
+# other
+.idea/
+old/
