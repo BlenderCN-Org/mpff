@@ -84,5 +84,4 @@ def apply_text():
     try:
         gl.rank_obj["Text"] = gl.text
     except:
-        pass
-        #print("Try n°5")
+        print("Try n°5")

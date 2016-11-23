@@ -29,7 +29,7 @@ Définit le Game Play
 
 Les try sont nécessaires car les objets appelés ne sont pas toujours présent
 dans les scènes à l'instant où ils sont appelés.
-L'important est qu'il n'y a pas de pass
+L'important est qu'il n'y ait pas de pass
 '''
 
 import GameLogic as gl
@@ -148,8 +148,7 @@ def bat_block():
         if gl.block == 1:
             gl.bat[gl.I_am]["activ"] = 0
     except:
-        pass
-        #print("Try n°7")
+        print("Try n°7")
 
 def display_rank_level1(scenes):
     '''Comptage du temps d'affichage seulement level 1.'''
@@ -242,8 +241,7 @@ def ball_out():
         elif gl.ball.localPosition[1] > 15:
             gl.ball.localPosition = [3, -3, 1]
     except:
-        pass
-        #print("Try n°3")
+        print("Try n°3")
 
 def automatic_bat(scenes):
     '''Seulement niveau 1. Mouvement auto de la raquette machine.'''
@@ -295,8 +293,7 @@ def positive_score():
             if gl.goal[g]["score"] <= 0:
                 gl.goal[g]["score"] = 0
         except:
-            pass
-            #print("Try n°4")
+            print("Try n°4")
 
 def ball_position():
     '''Placer la balle si je ne suis pas master.

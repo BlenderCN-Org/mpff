@@ -1,9 +1,9 @@
 # MultiPass For Freedom
 
-Pong en réseau local jusqu'à 10 joueurs. Réalisé avec
-[blender](https://www.blender.org/) et [python 3.4](https://www.python.org/)
+Pong en réseau local jusqu'à 10 joueurs. Réalisé avec [blender](https://www.blender.org/) et [python 3.4](https://www.python.org/)
 
-![10 joueurs](https://github.com/sergeLabo/MultiPassForFreedom/blob/twisted3/doc/mpff_10.png)
+![10 joueurs](https://github.com/sergeLabo/mpff/blob/master/doc/mpff_10.png)
+![3 joueurs](https://github.com/sergeLabo/mpff/blob/master/doc/mpff_02.png)
 
 Cette version utilise [twisted](https://twistedmatrix.com/trac/) en python 3
 
@@ -30,16 +30,16 @@ Pour plus détails voir le fichier Copyright
 
 ### Détails:
 
-[MultiPass For Freedom](https://github.com/sergeLabo/mpff/wiki)
+[MultiPass For Freedom]()
 
 ### Multicast
 
-Tous les PC et téléphones doivent être sur le même réseau local,
+Tous les PC doivent être sur le même réseau local,
 avec un routeur qui supporte le multicast
 
 ###Testé sur:
 
-Debian Jessie 8.3 avec Blender 2.72 en novembre 2016
+Debian Jessie 8.3 avec Blender 2.72
 
 ### Installation
 #### Blender
@@ -79,11 +79,9 @@ sudo python3 setup.py install
 
 ### Lancement du jeu
 
-Le jeu se lance avec les lanceurs du dossier pricipal.
+Le jeu se lance avec les lanceurs du dossier principal.
 
-Ces lanceurs doivent être excécutable.
-
-Lancer un seul server sur le réseau, puis lancer des jeux.
+Ces lanceurs doivent être excécutable. Lancer un seul server sur le réseau, puis lancer des jeux.
 
 Il est possible de lancer plusieurs jeux sur le même PC, mais un seul jeu
 peut-être utilisé pour jouer.
@@ -94,6 +92,9 @@ peut-être utilisé pour jouer.
 - R = Reset
 - B = Replacer la balle
 - Haut Bas pour déplacer la raquette
+
+### Test en simulant des joueurs
+
 
 ### Bug connu
 

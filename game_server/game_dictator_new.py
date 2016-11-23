@@ -48,7 +48,6 @@ import threading
 import json
 
 from labtools.labfifolist import PileFIFO
-from labtools.labformatter import Formatter
 
 
 class GameManagement():
@@ -75,6 +74,7 @@ class GameManagement():
         self.t_count = t  # Affichage fréquence régulier
         self.count = 0
         self.pile_dict = {}
+        self.len_pile = self.conf["pile"]["len_pile"]
 
     def insert_data_in_pile(self, user, data):
         '''Ajoute les datas reçues d'un user dans sa pile,
@@ -84,7 +84,7 @@ class GameManagement():
         try:
             self.pile_dict[user].append(data)
         except:
-            self.pile_dict[user] = PileFIFO(60)
+            self.pile_dict[user] = PileFIFO(self.len_pile)
             print("Init de la pile du user:", user)
 
         # Affichage de la fréquence d'appel de cette méthode
@@ -104,7 +104,8 @@ class GameManagement():
             # cle = user de TCP, valeur = pile, queue = list
             try:
                 # valeur est un object PileFIFO
-                msg = valeur.queue[59]
+                i = len(valeur.queue) - 1
+                msg = valeur.queue[i]
             except:
                 msg = None
             self.insert_data_in_players_dict(msg, cle)
@@ -227,7 +228,6 @@ class GameManagement():
             ball = v["ball_position"]
             # j'ai lu le premier dans le dict, sa balle sert pour les autres
             break
-        return ball
 
     def get_score(self):
         '''Retourne les scores de tous les joueurs, dans une liste.
@@ -318,7 +318,8 @@ class GameManagement():
         self.winner = None
         self.rank = None
         self.t_rank = 0
-        self.state = "play"
+        # TODO un reset demande Rank aux joueurs pendant 3s, puis play
+        self.state = "Rank"
 
     def print_some(self):
         if time() - self.t_print > 10:

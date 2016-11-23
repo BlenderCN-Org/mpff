@@ -17,6 +17,7 @@ from twisted.internet import reactor, defer
 
 from labtools.labconfig import MyConfig
 from labtools.labsometools import get_my_ip
+
 from game_dictator_new import GameManagement
 
 # Variable globale
