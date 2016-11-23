@@ -2,8 +2,8 @@
 
 Pong en réseau local jusqu'à 10 joueurs. Réalisé avec [blender](https://www.blender.org/) et [python 3.4](https://www.python.org/)
 
-![10 joueurs](https://github.com/sergeLabo/mpff/blob/master/doc/mpff_10.png =375x)
-![3 joueurs](https://github.com/sergeLabo/mpff/blob/master/doc/mpff_02.png =375x)
+![10 joueurs](https://github.com/sergeLabo/mpff/blob/master/doc/mpff_10.png)
+![3 joueurs](https://github.com/sergeLabo/mpff/blob/master/doc/mpff_02.png)
 
 Cette version utilise [twisted](https://twistedmatrix.com/trac/) en python 3
 
