@@ -6,11 +6,11 @@
 
 '''
 De msg =
-{'ball_position': [0.5, 3.3],
-'bat_position': [-9.4, 0.0],
-'my_score': 9,
-'my_name': 'ggffg1456048730',
-'my_ip': '192.168.0.103'}
+{"joueur": {    "my_name":       gl.my_name,
+                "ball_position": get_ball_position(),
+                "my_score":      get_my_score(),
+                "bat_position":  get_bat_position(),
+                "reset":         get_reset()}}
 
 Vers
 players = [
@@ -30,14 +30,14 @@ players = [
 ]
 
 msg envoyé:
-{'dictat': {
-'classement': {},
-'score': [9, 8],
-'who_are_you': {'gffgfg1456048734': 1, 'ggffg1456048730': 0},
-'other_bat_position': {0: [-9.4, 0.0], 1: [9.4, 0.0]},
-'level': 2,
-'ball_position_server': [0.5, 3.3],
-'state': 'play'}}
+{'dictat': {    'classement': {},
+                'score': [9, 8],
+                'who_are_you': {'gffgfg1456048734': 1, 'ggffg1456048730': 0},
+                'other_bat_position': {0: [-9.4, 0.0], 1: [9.4, 0.0]},
+                'level': 2,
+                'ball_position_server': [0.5, 3.3],
+                'scene': 'play'
+            }}
 '''
 
 
@@ -60,13 +60,15 @@ class GameManagement():
         # Dict des datas de tous les joueurs
         self.players = OrderedDict()
         # Gestion du jeu
-        self.winner = None
+        self.winner = ""
         self.ranked = []
-        self.state = "play"
-        self.rank = None
-        self.t_rank = 0
+        self.scene = "play"
+        self.rank_end = 0
+        self.t_rank = 0 # actualisé avec winner
         self.classement = {}
         self.level = 0
+        #self.reset = 0
+        self.t_reset = 0
 
         # Spécifique protocol twisted 3
         t = time()
@@ -75,6 +77,22 @@ class GameManagement():
         self.count = 0
         self.pile_dict = {}
         self.len_pile = self.conf["pile"]["len_pile"]
+
+    def reset_data(self):
+        '''Reset si demandé par un joueur avec R
+        ou à la fin de rank
+        '''
+
+        print("Reset in Game Dictator")
+        self.players = OrderedDict()
+        self.ranked = []
+        self.scene = "play"
+        self.winner = ""
+        self.rank_end = 0
+        self.t_rank = 0
+        self.classement = {}
+        self.level = 0
+        self.pile_dict = {}
 
     def insert_data_in_pile(self, user, data):
         '''Ajoute les datas reçues d'un user dans sa pile,
@@ -85,7 +103,7 @@ class GameManagement():
             self.pile_dict[user].append(data)
         except:
             self.pile_dict[user] = PileFIFO(self.len_pile)
-            print("Init de la pile du user:", user)
+            print("Création de la pile de:", user)
 
         # Affichage de la fréquence d'appel de cette méthode
         self.frequency()
@@ -114,12 +132,14 @@ class GameManagement():
         self.count += 1
         t = time()
         if t - self.t_count > 5:
-            print("Fréquence d'accès par les clients", int(self.count/5))
+            #print("Fréquence d'accès par les clients", int(self.count/5))
             self.count = 0
             self.t_count = t
 
     def insert_data_in_players_dict(self, msg, user):
-        '''A chaque reception de msg par le server, insère in dict'''
+        '''A chaque reception de msg par le server, insère in dict.
+        Ajout seulement si name créé dans blender.
+                '''
 
         # Seulement si le nom est valide, donc saisi
         try:
@@ -129,7 +149,6 @@ class GameManagement():
                     self.players[msg["my_name"]]["bat_position"] = msg["bat_position"]
                     self.players[msg["my_name"]]["my_score"] = msg["my_score"]
                     self.players[msg["my_name"]]["time"] = time()
-                    self.players[msg["my_name"]]["user"] = user
                 else:
                     self.players[msg["my_name"]] = {}
                     self.players[msg["my_name"]]["ball_position"] = msg["ball_position"]
@@ -139,18 +158,20 @@ class GameManagement():
                     self.players[msg["my_name"]]["time"] = time()
                     self.players[msg["my_name"]]["classement"] = 0
                     self.players[msg["my_name"]]["user"] = user
+                    print("Dans players, création de:", user)
         except:
-            pass
+            print("Pb dans insert_data_in_players_dict")
 
     def update_game_management(self):
         '''Appelé par create_msg_for_all_players, tourne donc à 60 fps.'''
 
         self.pile_to_players()
         self.update_level()
+
+        #if self.scene == "play":
         self.update_classement()
+
         self.update_rank()
-        #self.print_some()
-        pass
 
     def update_level(self):
         l = len(self.players)
@@ -159,16 +180,17 @@ class GameManagement():
         self.level = l
 
     def update_rank(self):
-        '''Je bloque la réception et maj,
-        j'envoie les infos pour la scène rank.'''
+        '''Gère le temps d'affichge de rank.'''
 
-        if self.rank == "Rank":
-            self.state = "Rank"
-            if time() - self.t_rank > 3:
+        if self.scene == "rank":
+            if time() - self.t_rank > 2:
+                self.rank_end = 1
+            if time() - self.t_rank > 2.1: # 5 ou 6 envoi
+                self.rank_end = 1
                 self.reset_data()
 
     def update_classement(self):
-        '''Fonction trop longue donc pas clair: TODO !!'''
+        '''TODO: Fonction trop longue donc pas clair'''
 
         self.ranked = []
 
@@ -201,7 +223,7 @@ class GameManagement():
                 if v["classement"] == 0:
                     v["classement"] = 1
                     self.winner = v["my_name"]
-                    self.rank = "Rank"
+                    self.scene = "rank"
                     self.t_rank = time()
                     print("The winner is {}".format(self.winner))
 
@@ -228,6 +250,11 @@ class GameManagement():
             ball = v["ball_position"]
             # j'ai lu le premier dans le dict, sa balle sert pour les autres
             break
+
+        ### TODO j'ai un bug, null en réception sur blender après scene rank
+        ##if not isinstance(ball, list):
+            ##ball = [8, 8]
+        return ball
 
     def get_score(self):
         '''Retourne les scores de tous les joueurs, dans une liste.
@@ -263,77 +290,82 @@ class GameManagement():
             a += 1
         return who
 
+    def get_reset(self):
+        '''envoi pendant t_reset'''
+
+        if time() - self.t_reset < 0.2:
+            return 1
+        else:
+            self.t_reset = 0
+            return 0
+
     def create_msg_for_all_players(self):
-        '''Appelé à 60 fps. Commence par demander une mise à jour du jeu.
+        '''Appelé à 60 fps par le serveur dans MyTcpServerFactory. Commence par
+        demander une mise à jour du jeu.
+
         Message à créer:
-        { 'ball_position_server': [7.19, 7.19],
-                        'classement': {},
-                        'state': 'play',
-                        'other_bat_position': {0: [-9.4, 0.0], 1: [-9.4, 0.40]},
-                        'level': 2,
-                        'who_are_you': {'tt1455984924': 0, 'tt1455984921': 1},
-                        'score': [9, 7]}
+        {   'ball_position_server': [7.19, 7.19],
+            'classement': {},
+            'state': 'play',
+            'other_bat_position': {0: [-9.4, 0.0], 1: [-9.4, 0.40]},
+            'level': 2,
+            'who_are_you': {'tt1455984924': 0, 'tt1455984921': 1},
+            'score': [9, 7],
+            'reset': 0 }
         '''
 
         # Maj
         self.update_game_management()
 
-        # Récup data à envoyer
-        ball = self.get_ball()
-        score = self.get_score()
-        bat = self.get_bat()
-        who = self.get_who()
-
         # Je regroupe tout
         if self.level > 1:
-            msg =   {"level": self.level,
-                                "state" : self.state,
-                                "ball_position_server": ball,
-                                "score": score,
-                                "other_bat_position": bat,
-                                "classement": self.classement,
-                                "who_are_you": who,
-                                 }
+            msg =   {   "level": self.level,
+                        "scene" : self.scene,
+                        "classement": self.classement,
+                        "ball_position_server": self.get_ball(),
+                        "score": self.get_score(),
+                        "other_bat_position": self.get_bat(),
+                        "who_are_you": self.get_who(),
+                        "rank_end":   self.rank_end,
+                        "reset": self.get_reset()  }
         else:
-            msg = None
+            msg = {"rien": 0}
+
+        self.print_some(msg)
 
         return msg
 
     def delete_disconnected_players(self, user):
-        '''Appelé depuis MyTcpServer si conection lost.'''
+        '''Appelé depuis MyTcpServer si conection lost.
+        TODO try a revoir pas normal'''
 
-        del self.pile_dict[user]
-        print("{} supprimé dans pile_dict".format(user))
+        try:
+            del self.pile_dict[user]
+            print("{} supprimé dans pile_dict".format(user))
+        except:
+            print("{} n'est pas dans pile_dict".format(user))
 
         for key, val in self.players.items():
-            if val["user"] == user:
-                del self.players[key]
-                break
-        print("{} supprimé dans players".format(key))
+            try:
+                if val["user"] == user:
+                    del self.players[key]
+                    break
+                print("{} supprimé dans players".format(key))
+            except:
+                print("{} n'est pas dans players".format(key))
 
-    def reset_data(self):
-        print("Reset in Game Dictator")
-        self.players = OrderedDict()
-        self.ranked = []
-        self.winner = None
-        self.rank = None
-        self.t_rank = 0
-        # TODO un reset demande Rank aux joueurs pendant 3s, puis play
-        self.state = "Rank"
+    def print_some(self, msg):
+        if time() - self.t_print > 2:
+            print("\nMessage envoyé:")
+            for k, v in msg.items():
+                print(k, v)
+            print()
 
-    def print_some(self):
-        if time() - self.t_print > 10:
-            toto = []
-            for k, v in self.players.items():
-                toto.append((v["my_name"][:-10], v["my_score"], v["classement"]))
-            print("Joueurs:\n {}".format(toto))
-            print( '''              level: {}, state: {}
-            classé: {}
-            classement: {}'''.format(self.level, self.state,
-                                    self.ranked, self.classement))
+            ##print("Joueurs en cours:")
+            ##for k, v in self.players.items():
+                ##print(v)
+            ##print()
 
-            for k, v in self.players.items():
-                print("joueur en cours", v)
             self.t_print = time()
 
 
@@ -346,23 +378,3 @@ if __name__ == "__main__":
     conf = MyConfig(scr + "/mpff.ini")
     my_conf = conf.conf
     game = GameManagement(conf)
-
-    msg1 = { "my_name":       "rien124",
-             "ball_position": [2,3],
-             "bat_position": [2, 4],
-             "my_score":      6 }
-
-    msg2 = { "my_name":       "tout123",
-             "ball_position": [2,3],
-             "bat_position": [2, 4],
-             "my_score":      7 }
-
-    msg3 = { "my_name":       "moi125",
-             "ball_position": [2,3],
-             "bat_position": [2, 4],
-             "my_score":      9 }
-
-    msg4 = { "my_name":       "toi333",
-             "ball_position": [2,3],
-             "bat_position": [2, 4],
-             "my_score":      8 }

@@ -70,12 +70,20 @@ class Player:
             self.create_simul()
 
     def create_name(self):
-        self.name = "n" + str(int(100*time()))[5:]
+        self.name = "s" + str(int(100*time()))[5:]
         print("Mon nom est {}".format(self.name))
 
     def create_simul(self):
-        '''le message prêt à être envoyer'''
-        self.simul =    {"joueur": {   'ball_position': self.ball,
+        '''le message prêt à être envoyer
+        msg = {"joueur": {  "my_name":       gl.my_name,
+                            "ball_position": get_ball_position(),
+                            "my_score":      get_my_score(),
+                            "bat_position":  get_bat_position(),
+                            "reset":         get_reset()
+                 }}
+                     '''
+        self.simul =    {"joueur": {    "reset":       0,
+                                        'ball_position': self.ball,
                                         'bat_position': self.bat,
                                         'my_score': self.score,
                                         'my_name': self.name}

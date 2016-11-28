@@ -33,24 +33,22 @@ Seuls les attributs de logic sont stockés en permanence.
 import ast
 import json
 import threading
-from time import sleep
+from time import sleep, time
 
 from twisted.internet.protocol import DatagramProtocol
-from twisted.internet.protocol import Protocol, ReconnectingClientFactory
-from twisted.internet.endpoints import TCP4ServerEndpoint
 from twisted.internet import reactor
 
 from scripts.labtools.labconfig import MyConfig
-from scripts.labtools.labformatter import Formatter
-from scripts.labtools.tempo import Tempo
+from scripts.labtools.labtempo import Tempo
+from scripts.labtools.labtcpclient import LabTcpClient
 
+from scripts import game
 
 # Blender
 from bge import logic as gl
 
-
 class MulticastClient(DatagramProtocol):
-    '''Ce client reçoit les datas du serveur, ip et dictat'''
+    '''Ce client reçoit les datas du serveur.'''
 
     def startProtocol(self):
         '''Ticket sur le groupe multicast.'''
@@ -58,13 +56,12 @@ class MulticastClient(DatagramProtocol):
         # Join the multicast address, so we can receive replies:
         self.transport.joinGroup(gl.multi_ip)
 
-        print("Le Client Multicast a pris un ticket sur {}".format(gl.multi_addr))
+        print("\nClient Multicast sur {}\n".format(gl.multi_addr))
 
     def datagramReceived(self, datagram, address):
         '''Réception, demande de traitement.'''
 
         data = datagram_decode(datagram)
-
         if data:
             self.datagram_sorting(data)
 
@@ -79,22 +76,40 @@ class MulticastClient(DatagramProtocol):
         if "dictat" in data:
             data = data["dictat"]
             if data:
-                if gl.state == "play" or gl.state == "Rank":
+                if gl.scene == "play" or gl.scene == "rank":
                     self.tri_msg(data)
 
     def tri_msg(self, data):
+        '''Set des variables attributs du game logic.'''
+
         if "level" in data:
             gl.level = data["level"]
+            # TODO fonction dans game
+            # seulement 10 scenes de jeu
             if gl.level < 1:
                 gl.level = 1
             if gl.level > 10:
                 gl.level = 10
 
-        if "state" in data:
-            gl.state = data["state"]
+        if "reset" in data:
+            if data["reset"]:
+                game.reset_variables()
+
+        if "rank_end" in data:
+            gl.rank_end = data["rank_end"]
+            # TODO fonction dans game
+            if gl.rank_end:
+                print("Fin de rank:", gl.rank_end)
+                try:
+                    for i in range(gl.level):
+                        gl.goal[i]["score"] = 10
+                except:
+                    print("Goal non accessible pour reset score")
+
+        if "scene" in data:
+            gl.scene = data["scene"]
 
         if "ball_position_server" in data:
-            # list de 2
             gl.ball_position_server = data["ball_position_server"]
 
         if "score" in data:
@@ -104,7 +119,7 @@ class MulticastClient(DatagramProtocol):
             gl.bat_position = data["other_bat_position"]
 
         if "who_are_you" in data:
-            '''Ma place dans ??????????'''
+            # TODO fonction dans game
             # {"toto":0, "tata":1}
             who = data["who_are_you"]
             for k, v in who.items():
@@ -112,71 +127,7 @@ class MulticastClient(DatagramProtocol):
                     gl.I_am = v
 
         if "classement" in data:
-            '''Classement des joueurs:
-            {'toto': 3, 'labomedia': 2, 'gddgsg': 1}
-            '''
             gl.classement = data["classement"]
-
-
-class MyTcpClient(Protocol):
-
-    def connectionMade(self):
-        print("Connexion établie avec le serveur\n")
-        self.send_thread()
-
-    def connectionLost(self, reason):
-        print("Connection lost")
-
-    def send(self, data):
-        '''Envoi d'un message si play en cours:
-        data doit êre un dictionnaire.
-        '''
-
-        if gl.state == "play":
-            msg_json = json.dumps(data) # str
-            msg = msg_json.encode("utf-8")  # bytes
-            try:
-                self.transport.write(msg)
-            except:
-                pass
-
-    def send_loop(self):
-        while 1:
-            #print(gl.msg_to_send)
-            sleep(0.015)
-            # gl.msg_to_sen json + encodé dans message.py
-            if gl.msg_to_send:
-                self.send(gl.msg_to_send)
-                gl.msg_to_send = None
-
-
-    def send_thread(self):
-        self.t = threading.Thread(target=self.send_loop)
-        self.t.start()
-
-
-class MyTcpClientFactory(ReconnectingClientFactory):
-
-    def startedConnecting(self, connector):
-        print("\nstartedConnecting sur ip", gl.ip_server, "\n")
-
-    def buildProtocol(self, addr):
-        print('Connecté à {}'.format(addr))
-        print('Resetting reconnection delay')
-        self.resetDelay()
-        self.maxDelay = 1  # seconds
-        return MyTcpClient()
-
-    def clientConnectionLost(self, connector, reason):
-        print('Lost connection.  Reason:', reason)
-        print('Resetting reconnection delay')
-        self.resetDelay()
-        self.maxDelay = 1
-        ReconnectingClientFactory.clientConnectionLost(self, connector, reason)
-
-    def clientConnectionFailed(self, connector, reason):
-        print('Connection failed. Reason:', reason)
-        ReconnectingClientFactory.clientConnectionLost(self, connector, reason)
 
 
 def datagram_decode(datagram):
@@ -203,26 +154,6 @@ def datagram_decode(datagram):
         print("Mauvais message reçu")
         return None
 
-def run_twisted():
-    reactor.listenMulticast(gl.multi_port, MulticastClient(), listenMultiple=True)
-    #reactor.connectTCP(gl.ip_server, gl.tcp_port, MyTcpClientFactory())
-    reactor.run(installSignalHandlers=False)
-
-def run_twisted_thread():
-    thread_twist = threading.Thread(target=run_twisted)
-    thread_twist.start()
-
-def TCP_client():
-    '''Crée le client TCP.'''
-
-    reactor.connectTCP(gl.ip_server, gl.tcp_port, MyTcpClientFactory())
-
-def TCP_client_thread():
-    '''Le client est dans un thread.'''
-
-    thread_t = threading.Thread(target=TCP_client)
-    thread_t.start()
-
 def get_conf():
     '''Récupère la configuration depuis le fichier *.ini.'''
 
@@ -237,15 +168,14 @@ def get_conf():
     gl.ma_conf = MyConfig(current_dir + "scripts/mpff.ini")
     gl.conf = gl.ma_conf.conf
 
-    print("Configuration du jeu MPFF:\n")
-    pretty = Formatter()
-    print(pretty(gl.conf))
+    print("\nConfiguration du jeu MPFF:")
+    print(gl.conf, "\n")
 
 def init_variable():
     '''Valeurs par défaut de tous les attributs du bge.logic'''
 
     # state possible:play rank labo
-    gl.state = "labo"
+    gl.scene = "labo"
 
     # msg à envoyer
     gl.msg_to_send = None
@@ -253,6 +183,7 @@ def init_variable():
     # Défini par le serveur
     gl.level = 1
     gl.block = 0
+    gl.rank_end = 0
 
     # Rank
     gl.text = ""
@@ -278,7 +209,7 @@ def init_variable():
     gl.name_obj = 0
 
     gl.I_am = 0
-    gl.ip_server = "127.0.0.1"
+    gl.ip_server = None
 
     gl.multi_ip = gl.conf["multicast"]["ip"]
     gl.multi_port = gl.conf["multicast"]["port"]
@@ -336,6 +267,21 @@ def init_tempo():
     tempo_liste = [("always", 1), ("frame_60", 60)]
     gl.tempoDict = Tempo(tempo_liste)
 
+def simple():
+    reactor.listenMulticast(gl.multi_port, MulticastClient(), listenMultiple=True)
+    reactor.run(installSignalHandlers=False)
+
+def simple_thread():
+    '''Le client est dans un thread.'''
+
+    thread_s = threading.Thread(target=simple)
+    thread_s.start()
+
+def create_tcp_socket():
+    '''Client TCP connecté'''
+
+    gl.tcp_client = LabTcpClient(gl.ip_server, gl.tcp_port)
+
 def main():
     '''Lancé une seule fois à la 1ère frame au début du jeu par main_once.'''
 
@@ -344,20 +290,16 @@ def main():
     init_blender_obj()
     init_tempo()
 
-    # Lance multicast et reactor
-    run_twisted_thread()
+    # Lancement du thread multicast
+    simple_thread()
 
-    # Envoi TCP
-    # Pour lancer ce thread, il faut avoir reçu l'ip server en multicast
-    # Vérif que ip server est ok
+    # Récupération de ip serveur sur multicast
+    while not gl.ip_server:
+        sleep(0.5)
+        print("\nAttente ip du serveur ...")
+        print(".........................\n")
+        if gl.ip_server:
+            break
 
-    # sinon ne fait pas le while !!!!!!!! TODO
-    sleep(1)
-    print(gl.ip_server)
-    ##while gl.ip_server != "127.0.0.1":
-        ##sleep(1)
-        ##print("attente")
-
-    print("\nIP serveur =", gl.ip_server, "lancement thread TCP")
-    # C'est bon pour le TCP
-    TCP_client_thread()
+    print("Ip serveur:", gl.ip_server)
+    create_tcp_socket()

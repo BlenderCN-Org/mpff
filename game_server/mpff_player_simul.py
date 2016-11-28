@@ -25,6 +25,8 @@ from player_simul import Player
 HOST = "127.0.0.1"
 PORT = 8888
 
+tempo = 0.01666
+
 NUMERO_JOUEUR = random.randint(0, 8)
 print("Numéro du joueur", NUMERO_JOUEUR)
 
@@ -40,7 +42,6 @@ PLAYER_LIST = [ ( (3, 7), (-5, -5), 0.4,   160,      5, -2,  9, 2 ),
                 ( (2, 9), (3,  3),  0.7,   110,     -1, -3,  3, 1 ),
                 ( (1, 9), (4,  4),  0.8,   80,       1,  0,  5, -4 ),
                 ( (1, 5), (4,  5),  0.9,   250,      3,  2,  8, -8 )]
-
 
 
 class MyTcpClient(Protocol):
@@ -75,7 +76,7 @@ class MyTcpClient(Protocol):
         '''
 
         while 1:
-            sleep(0.01666)
+            sleep(tempo)
             simul = self.player_simul.simul
             simul_json = json.dumps(simul)
             toto = simul_json.encode("utf-8")
@@ -83,7 +84,6 @@ class MyTcpClient(Protocol):
             if time() - self.t_print > 1:
                 self.t_print = time()
                 print(simul)
-
 
     def loop_thread(self):
         '''Thread d'envoi.'''

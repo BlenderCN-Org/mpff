@@ -37,13 +37,11 @@ from scripts import rank_display
 
 def main():
     '''Lancé à chaque frame à partir de la 2ème frame.
-
     Cette fonction est appelée par main_init.main dans blender.
     '''
 
-
     # Première chose à faire en tout temps
-    # Récupère tous les objets blender des scenes x_players
+    # Récupère tous les objets blender des scenes en cours
     scene_objet.main()
 
     # Si scène name_capture
@@ -74,5 +72,5 @@ def name_capture():
             # je suis à peu près sûr qu'il n'y aura pas 2 noms identiques
             gl.my_name = name + str(int(time()))
             gl.my_name_ok = 1
-            gl.state = "play"
-            print("Mon nom est {}".format(gl.my_name[:-10]))
+            gl.scene = "play"
+            print("Mon nom est {}".format(gl.my_name))  #[:-10]))

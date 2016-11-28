@@ -81,7 +81,9 @@ sudo python3 setup.py install
 
 Le jeu se lance avec les lanceurs du dossier principal.
 
-Ces lanceurs doivent être excécutable. Lancer un seul server sur le réseau, puis lancer des jeux.
+Ces lanceurs doivent être excécutable.
+Lancer un seul server sur le réseau, puis lancer des jeux.
+Un serveur doit absolument être lancé avant les jeux.
 
 Il est possible de lancer plusieurs jeux sur le même PC, mais un seul jeu
 peut-être utilisé pour jouer.
@@ -98,7 +100,8 @@ peut-être utilisé pour jouer.
 
 ### Bug connu
 
-
+- Le serveur doit être lancé obligatoirement avant de lancer des jeux !
+- Les threads dans Blender ne gèrent pas les deconnexions.
 
 ### Merci à:
 

@@ -34,10 +34,12 @@ TO_BLEND = queue.Queue()
 
 
 class MyMulticastSender(DatagramProtocol):
-    '''Envoi en continu à 60 fps à tous les joueurs.'''
+    '''Envoi en continu à 60 fps à tous les joueurs, ip et data.'''
 
     def __init__(self):
 
+        self.tempo = time()
+        self.count = 0
         self.ip_server = get_my_ip()
         print("Envoi en multicast sur", MULTICAST_IP, MULTICAST_PORT, "\n")
 
@@ -65,36 +67,45 @@ class MyMulticastSender(DatagramProtocol):
             # récup dans la pile
             # un chouilla plus rapide que 60 fps,
             # pour ne pas prendre de retard sur le put() et remplir la queue
-            sleep(0.016)
+            sleep(0.015)
             try:
                 # TO_BLEND maj à 60 fps
-                data = TO_BLEND.get(block=False, timeout=0.01)
+                data = TO_BLEND.get(block=False, timeout=0.001)
             except:
                 data = None
 
             # envoi
             lapin = self.create_multi_msg(data)
-            self.transport.write(lapin, addr)
+
+            try:
+                self.transport.write(lapin, addr)
+                self.count += 1
+                if time() - self.tempo > 1:
+                    #print("Fréquence d'envoi multicast", self.count)
+                    self.count = 0
+                    self.tempo = time()
+
+            except OSError as e:
+                if e.errno == 101:
+                    print("Network is unreachable")
 
     def create_multi_msg(self, data):
-        '''Retourne msg encoddé à envoyer en permanence, dès __init__
-        {"dictat":   {   "level": self.level,
-                            "state" : self.state,
-                            "ball_position_server": ball,
-                            "score": score,
-                            "other_bat_position": bat,
-                            "classement": self.classement,
-                            "who_are_you": who,
-                        }
-            }
+        '''Retourne msg encodé à envoyer en permanence, dès __init__
+        {"dictat":   {  "level": self.level,
+                        "scene" : self.scene,
+                        "ball_position_server": ball,
+                        "score": score,
+                        "other_bat_position": bat,
+                        "classement": self.classement,
+                        "who_are_you": who,
+                        "reset": 0}}
             ou None
         '''
 
         if data: # data est un dict ou None
             lapin = {"paradis": {"ip": self.ip_server, "dictat": data}}
         else:
-            blanc = {"dictat": 0}
-            lapin = {"paradis": {"ip": self.ip_server, "dictat": blanc}}
+            lapin = {"paradis": {"ip": self.ip_server, "dictat": {'rien': 0}}}
 
         lapin_enc = json.dumps(lapin).encode("utf-8")
         return lapin_enc
@@ -109,12 +120,12 @@ class MyTcpServer(Protocol):
             {   'ball_position': [0.5, 3.3],
                 'bat_position': [-9.4, 0.0],
                 'my_score': 9,
-                'my_name': 'fg1456048' }
+                'my_name': 'fg1456048',
+                'reset': 0 }
     '''
 
     def __init__(self, factory):
         self.factory = factory
-        self.t_zero = time()
         self.create_user()
 
     def create_user(self):
@@ -145,21 +156,21 @@ class MyTcpServer(Protocol):
                 joueur = data["joueur"]
                 self.insert_data(joueur)
 
-    def dataReceived_callback(self, data):
-        '''Avec callback defered, plus lent et n'apporte rien !'''
-
-        # Retourne un dict ou None
-        data = datagram_decode(data)
-
-        if data:
-            d = defer.Deferred()
-            d.addCallback(self.insert_data)
-            reactor.callLater(0, d.callback, data)
+                if joueur["reset"] == 1:
+                    self.reset_game()
 
     def insert_data(self, data) :
         '''Insère la dernière data reçue dans la pile du user.'''
 
         self.factory.game.insert_data_in_pile(self.user, data)
+
+    def reset_game(self) :
+        '''Insère la dernière data reçue dans la pile du user.'''
+
+        print("Reset demandé sur serveur")
+        ##self.factory.game.reset = 1
+        self.factory.game.t_reset = time()
+        self.factory.game.reset_data()
 
 
 class MyTcpServerFactory(Factory):
@@ -196,10 +207,11 @@ class MyTcpServerFactory(Factory):
         while 1:
             # 60 fps pile poil, get se fera un peu plus vite, pour avoir une
             # queue vide àprès chaque lecture
-            sleep(0.01666)
+            sleep(0.0166)
             # get message
             msg = self.game.create_msg_for_all_players()
-            # Put dans la variable globale
+            #print(msg)
+            # Le met dans la variable globale
             # qui sera lue par le thread de MyMulticastSender
             TO_BLEND.put(msg)  # msg est dict ou None
 
@@ -207,6 +219,7 @@ class MyTcpServerFactory(Factory):
         '''Thread qui tourne dans Factory pour récupérer le message généré
         dans GameManagement.
         '''
+
         thread_msg = threading.Thread(target=self.get_and_queued_msg)
         thread_msg.start()
 
@@ -222,7 +235,6 @@ def datagram_decode(data):
         #print("Décodage UTF-8 impossible")
         dec = data
 
-    #print(dec)
     try:
         msg = ast.literal_eval(dec)
     except:

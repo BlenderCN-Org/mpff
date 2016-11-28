@@ -37,6 +37,34 @@ import ast
 def main():
 
     gl.msg_to_send = create_msg_to_send()
+    # à commenter pour test twisted
+    send_tcp_message()
+
+def send_tcp_message():
+    if gl.msg_to_send:
+        msg = json.dumps(gl.msg_to_send).encode("utf-8")
+        try:
+            gl.tcp_client.send(msg)
+        except:
+            print("Client TCP déconnecté")
+
+def create_msg_to_send():
+    '''Retourne le message à envoyer au server.
+
+        msg = {"joueur":    {   'ball_position': [0.5, 3.3],
+                                'bat_position': [-9.4, 0.0],
+                                'my_score': 9,
+                                'my_name': 'ggffg1456048730'}
+    '''
+
+    msg = {"joueur": {  "my_name":       gl.my_name,
+                        "ball_position": get_ball_position(),
+                        "my_score":      get_my_score(),
+                        "bat_position":  get_bat_position(),
+                        "reset":         get_reset()
+                     }}
+
+    return msg
 
 def get_my_score():
     '''Retourne mon score, je suis 0.'''
@@ -63,7 +91,7 @@ def get_ball_position():
         x = gl.ball.localPosition[0]
         y = gl.ball.localPosition[1]
     except:
-        x, y = 0, 0
+        x, y = 2, 2
     return [round(x, 2), round(y, 2)]
 
 def get_bat_position():
@@ -76,18 +104,14 @@ def get_bat_position():
         x, y = 0, 0
     return [round(x, 2), round(y, 2)]
 
-def create_msg_to_send():
-    '''Retourne le message à envoyer au server.
+def get_reset():
+    '''Avec la touches R, envoi sur capture name et rank.'''
 
-        msg = {"joueur":    {   'ball_position': [0.5, 3.3],
-                                'bat_position': [-9.4, 0.0],
-                                'my_score': 9,
-                                'my_name': 'ggffg1456048730'}
-    '''
-
-    msg = {"joueur": {  "my_name":       gl.my_name,
-                        "ball_position": get_ball_position(),
-                        "my_score":      get_my_score(),
-                        "bat_position":  get_bat_position()}}
-
-    return msg
+    # TODO R dans nom fait reset
+    if gl.cube_obj["reset"]:
+        print("Demande de reset au serveur")
+        gl.cube_obj["reset"] = False
+        # Envoi au server de {"reset": 1}
+        return 1
+    else:
+        return 0

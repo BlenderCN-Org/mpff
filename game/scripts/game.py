@@ -40,47 +40,49 @@ from scripts import message
 
 
 def main():
-    '''La scène Labomedia est toujours en background.'''
+    '''La scène Labomedia est toujours en background.
+    Toujours excécuté, pour main et level_1_main'''
 
     scenes = gl.getSceneList()
-    R_B_keys()
+
+    # Balle au centre
+    B_keys()
+
     print_some()
-    set_resolution(scenes)
-    # mon nom a été capturé
+    set_help_resolution()
+
+    # si mon nom a été capturé
     if gl.my_name_ok == 1:
-        if gl.state == "play":
-            # Plus de name ou rank
-            for scn in scenes:
-                if "Name" in scn.name:
-                    scn.end()
-                if "Rank" in scn.name:
-                    scn.end()
-            # Ajout de la scène de jeu au bon niveau
-            set_good_level_scene(scenes)
+        if gl.level == 1:
+            level_1_main(scenes)
+        else:
+            all_level_not_1_main(scenes)
 
-            # Niveau 1
-            if gl.level == 1:
-                level_1_main(scenes)
+def all_level_not_1_main(scenes):
+    if gl.scene == "play":
+        set_scene_play(scenes)
+        positive_score()
+        set_score()
+        other_bat_position()
+        ball_position()
+        ball_out()
+        bat_block()
 
-            # Pour tous les autres niveaux
-            else:
-                for scn in scenes :
-                    if "_players" in scn.name :
-                        positive_score()
-                        set_score()
-                        other_bat_position()
-                        ball_position()
-                        ball_out()
-                        bat_block()
-    # Rank
-    if gl.state == "Rank":
+    if gl.scene == "rank":
         overlay_scene_rank(scenes)
         rank_display.main()
-        display_rank_level1(scenes)
 
-def set_resolution(scenes):
-    '''Text resolution.'''
-    gl.help_obj.resolution = 16.0 # resolution is normaly 1.0 / 72 dpi
+def set_scene_play(scenes):
+    '''Ajoute les scenes.'''
+
+    # Sécurité, plus de name ou rank
+    for scn in scenes:
+        if "Name" in scn.name:
+            scn.end()
+        if "Rank" in scn.name:
+            scn.end()
+    # Ajout de la scène de jeu au bon niveau
+    set_good_level_scene(scenes)
 
 def set_good_level_scene(scenes):
     '''Lance la scene au bon niveau si un joueur arrive ou quitte le jeu.'''
@@ -115,17 +117,36 @@ def overlay_scene(scn, overlay=1):
 
     gl.addScene(scn, overlay)
 
+def overlay_scene_rank(scenes):
+    '''Ajoute la sceène rank en overlay.'''
+
+    scene_list = []
+    for scn in scenes :
+        scene_list.append(scn.name)
+
+    if not "Rank" in scene_list:
+        # Overlay la scène rank
+        gl.addScene("Rank", 1)
+
 def level_1_main(scenes):
     '''Machine n'est pas géré par le serveur
     donc main() particulier pour le level 1.
     '''
+
+    if gl.scene == "play":
+        set_scene_play(scenes)
+
+    elif gl.scene == "rank":
+        overlay_scene_rank(scenes)
+        rank_display.main()
+        display_rank_level1(scenes)
 
     positive_score()
     set_score()
     bat_block()
     ball_out()
     classement_level1(scenes)
-    # La bat auto est active si pas de scène Rank
+    # La bat auto est active si pas de scène rank
     if gl.level1_rated == 0:
         automatic_bat(scenes)
 
@@ -148,19 +169,7 @@ def bat_block():
         if gl.block == 1:
             gl.bat[gl.I_am]["activ"] = 0
     except:
-        print("Try n°7")
-
-def display_rank_level1(scenes):
-    '''Comptage du temps d'affichage seulement level 1.'''
-
-    gl.tempo_rank_level1 += 1
-    if gl.tempo_rank_level1 == 2:
-        print("Rank Text \n{}".format(gl.text))
-
-    if gl.tempo_rank_level1 > 240:
-        # Fin de la scène Rank
-        del_rank_scene(scenes)
-        reset_variables()
+        print("Bat et goal non accessible  ")
 
 def classement_level1(scenes):
     '''Classement du joueur et de la machine au niveau 1. 2 Cas:'''
@@ -173,8 +182,8 @@ def classement_level1(scenes):
                 gl.classement_level1[gl.my_name] = 1
                 # Je ne repasserai plus par ici
                 gl.level1_rated = 1
-                # demande de la scèneRank
-                gl.state = "Rank"
+                # demande de la scènerank
+                gl.scene = "rank"
                 print("Dans niveau 1, j'ai gagné")
 
             # Cas 2: je perds, machine gagne
@@ -183,26 +192,27 @@ def classement_level1(scenes):
                 gl.classement_level1[gl.my_name] = 2
                 # Je ne repasserai plus par ici
                 gl.level1_rated = 1
-                # demande de la scèneRank
-                gl.state = "Rank"
+                # demande de la scènerank
+                gl.scene = "rank"
                 print("Dans niveau 1, machine a gagné")
         else:
             # calcul du temps d'affichage
             display_rank_level1(scenes)
 
-def overlay_scene_rank(scenes):
-    '''Ajoute la sceène Rank en overlay.'''
+def display_rank_level1(scenes):
+    '''Comptage du temps d'affichage seulement level 1.'''
 
-    scene_list = []
-    for scn in scenes :
-        scene_list.append(scn.name)
+    gl.tempo_rank_level1 += 1
+    if gl.tempo_rank_level1 == 2:
+        print("rank Text \n{}".format(gl.text))
 
-    if not "Rank" in scene_list:
-        # Overlay la scène Rank
-        gl.addScene("Rank")
+    if gl.tempo_rank_level1 > 240:
+        # Fin de la scène rank
+        del_rank_scene(scenes)
+        reset_variables()
 
 def del_rank_scene(scenes):
-    '''Supprime la scène Rank.'''
+    '''Supprime la scène rank.'''
 
     for scn in scenes :
         if "Rank" in scn.name:
@@ -214,10 +224,10 @@ def reset_variables():
 
     print("Reset variables in game.py")
     try:
-        gl.goal[0]["score"] = 10
-        gl.goal[1]["score"] = 10
+        for i in range(gl.level):
+            gl.goal[i]["score"] = 10
     except:
-        print("Try n°8")
+        print("Goal non accessible")
 
     gl.tempo_globale = 0
     gl.level1_rated = 0
@@ -226,7 +236,7 @@ def reset_variables():
     # Le dictionnaire de classement des joueurs
     gl.classement = {}
     gl.block = 0
-    gl.state = "play"
+    gl.scene = "play"
 
 def ball_out():
     '''Remet la Ball dans le jeu si la balle sort du jeu.'''
@@ -241,7 +251,7 @@ def ball_out():
         elif gl.ball.localPosition[1] > 15:
             gl.ball.localPosition = [3, -3, 1]
     except:
-        print("Try n°3")
+        print("Balle non accessible")
 
 def automatic_bat(scenes):
     '''Seulement niveau 1. Mouvement auto de la raquette machine.'''
@@ -252,7 +262,7 @@ def automatic_bat(scenes):
                 y = 0.7 * gl.ball.localPosition[1]
                 gl.bat[1].localPosition = [9.5, y, 1]
             except:
-                print("Try n°2")
+                print("Bat non accessible")
 
 def set_score():
     '''Maj des scores avec les valeurs du server.'''
@@ -263,7 +273,7 @@ def set_score():
                 try:
                     gl.goal[player]["score"] = gl.score[player]
                 except:
-                    print("Try n°1")
+                    print("Goal non accessible")
 
 def other_bat_position():
     '''Définir les positions des raquettes des autres joueurs, pas pour moi,
@@ -278,7 +288,7 @@ def other_bat_position():
                                                 gl.bat_position[str(player)][1],
                                                 1]
         except:
-                print("Try n°6")
+                print("Bat non accessible")
 
 def positive_score():
     '''Tous les scores doivent être >= 0'''
@@ -293,7 +303,7 @@ def positive_score():
             if gl.goal[g]["score"] <= 0:
                 gl.goal[g]["score"] = 0
         except:
-            print("Try n°4")
+            print("Goal non accessible")
 
 def ball_position():
     '''Placer la balle si je ne suis pas master.
@@ -307,25 +317,27 @@ def ball_position():
         # Set position
         gl.ball.localPosition = [gl.ball_position_server[0], gl.ball_position_server[1], 1]
 
-def R_B_keys():
-    '''Pour les touches R et B.'''
+def B_keys():
+    '''Pour la touches B, replacement de la balle.
+    Pas de B sur capture name'''
 
-    if gl.cube_obj["ball"]:
-        gl.cube_obj["ball"] = False
-        gl.ball.localPosition = [3, -3, 1]
-
-    if gl.cube_obj["reset"]:
-        gl.cube_obj["reset"] = False
-        reset_variables()
-        # Envoi au sever de {"reset":1}
-        msg = {"reset":1}
-        # TODO
-        network.send_to_server(msg)
+    if gl.scene == "play":
+        if gl.cube_obj["ball"]:
+            gl.cube_obj["ball"] = False
+            print("Balle au centre")
+            try: # pb si b dans name capture
+                gl.ball.localPosition = [3, -3, 1]
+            except:
+                print("Accès balle impossible")
 
 def print_some():
     '''Print toutes les s des valeurs permettant de debugguer.'''
 
-    if gl.tempoDict["frame_60"].tempo == 60:
-            print(  "Mon nom: {}, mon n°: {}, state: {}".format(\
-                    gl.my_name[:-10], gl.I_am, gl.state))
-            #print("FrameRate =", int(gl.getAverageFrameRate()))
+    if gl.tempoDict["frame_60"].tempo == 300:
+        #print("FrameRate =", int(gl.getAverageFrameRate()))
+        print(  "Mon nom: {}, mon n°: {}, scene: {}".format(\
+                 gl.my_name[:-10], gl.I_am, gl.scene))
+
+def set_help_resolution():
+    '''Text resolution.'''
+    gl.help_obj.resolution = 16.0 # resolution is normaly 1.0 / 72 dpi

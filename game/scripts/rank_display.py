@@ -80,8 +80,10 @@ def create_text():
         gl.text = gl.text + str(text_list[c])
 
 def apply_text():
-    # Récupération de l'objet Rank_display et sa prop Text
+    '''Récupération de l'objet Rank_display et sa prop Text'''
+
+    a = "L'objet rank_obj n'est pas accesssible pour application du texte"
     try:
         gl.rank_obj["Text"] = gl.text
     except:
-        print("Try n°5")
+        print(a)
