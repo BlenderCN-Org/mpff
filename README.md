@@ -7,7 +7,7 @@ Pong en réseau local jusqu'à 10 joueurs. Réalisé avec [blender](https://www.
 
 Cette version utilise [twisted](https://twistedmatrix.com/trac/) en python 3
 
-### Origine du jeu
+### Genèse du jeu
 
 Ce jeu est un exercice sur les réseaux. Un jeu hyper simple créé dans Blender,
 
@@ -28,16 +28,15 @@ Copyright (C) Labomedia May 2012
 
 Pour plus détails voir le fichier Copyright
 
-### Détails:
-
-[MultiPass For Freedom]()
+### Détails
+Sur le wiki: [MultiPass For Freedom]()
 
 ### Multicast
 
 Tous les PC doivent être sur le même réseau local,
 avec un routeur qui supporte le multicast
 
-###Testé sur:
+###Testé sur
 
 Debian Jessie 8.3 avec Blender 2.72
 
@@ -49,13 +48,13 @@ sudo apt-get install blender
 ~~~
 
 #### Installation de twisted pour python 3
-#### Dépendances
+##### Dépendances
 
 ~~~text
  sudo apt-get install python3-dev python3-setuptools
 ~~~
 
-#### Install
+##### Install
 
 Les sources de twisted comprennent les versions pour python2 et python3.
 
@@ -79,16 +78,13 @@ sudo python3 setup.py install
 
 ### Lancement du jeu
 
-Le jeu se lance avec les lanceurs du dossier principal.
+Le jeu se lance avec les lanceurs du dossier principal. Ces lanceurs doivent être excécutable.
 
-Ces lanceurs doivent être excécutable.
-Lancer un seul server sur le réseau, puis lancer des jeux.
-Un serveur doit absolument être lancé avant les jeux.
+Lancer un seul server sur le réseau, puis lancer des jeux. Un serveur doit absolument être lancé avant les jeux.
 
-Il est possible de lancer plusieurs jeux sur le même PC, mais un seul jeu
-peut-être utilisé pour jouer.
+Il est possible de lancer plusieurs jeux sur le même PC, mais un seul jeu peut-être utilisé pour jouer.
 
-### Pour jouer:
+### Pour jouer
 
 - Space = Aide
 - R = Reset
@@ -100,9 +96,9 @@ peut-être utilisé pour jouer.
 
 ### Bug connu
 
-- Le serveur doit être lancé obligatoirement avant de lancer des jeux !
-- Les threads dans Blender ne gèrent pas les deconnexions.
+- Le serveur doit être lancé obligatoirement avant de lancer des jeux.
+- Les déconnexions ne sont pas gérées.
 
 ### Merci à:
 
- - Labomedia et à ces membres qui ont proposé de nombreuses pistes d'amélioration.
+ - Labomedia

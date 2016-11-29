@@ -168,7 +168,6 @@ class MyTcpServer(Protocol):
         '''Insère la dernière data reçue dans la pile du user.'''
 
         print("Reset demandé sur serveur")
-        ##self.factory.game.reset = 1
         self.factory.game.t_reset = time()
         self.factory.game.reset_data()
 

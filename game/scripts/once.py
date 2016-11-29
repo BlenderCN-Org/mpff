@@ -30,6 +30,8 @@ Seuls les attributs de logic sont stockés en permanence.
 
 '''
 
+
+import os
 import ast
 import json
 import threading
@@ -41,10 +43,7 @@ from twisted.internet import reactor
 from scripts.labtools.labconfig import MyConfig
 from scripts.labtools.labtempo import Tempo
 from scripts.labtools.labtcpclient import LabTcpClient
-
 from scripts import game
-
-# Blender
 from bge import logic as gl
 
 class MulticastClient(DatagramProtocol):
@@ -293,13 +292,19 @@ def main():
     # Lancement du thread multicast
     simple_thread()
 
+    t0 = time()
+    t1 = t0 + 10
     # Récupération de ip serveur sur multicast
     while not gl.ip_server:
         sleep(0.5)
         print("\nAttente ip du serveur ...")
         print(".........................\n")
-        if gl.ip_server:
-            break
+
+        if time() - t1 > 0:
+            print("\nVous devez lancer un serveur avant de lancer un jeu.")
+            print("Le serveur et les joueurs doivent être")
+            print("sur le même réseau local.")
+            os._exit(0)
 
     print("Ip serveur:", gl.ip_server)
     create_tcp_socket()

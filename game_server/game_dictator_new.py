@@ -57,8 +57,11 @@ class GameManagement():
         # Config du jeu
         self.conf = conf
 
+        t = time()
+
         # Dict des datas de tous les joueurs
         self.players = OrderedDict()
+
         # Gestion du jeu
         self.winner = ""
         self.ranked = []
@@ -67,11 +70,10 @@ class GameManagement():
         self.t_rank = 0 # actualisé avec winner
         self.classement = {}
         self.level = 0
-        #self.reset = 0
         self.t_reset = 0
+        #self.t_level_0 = t
 
         # Spécifique protocol twisted 3
-        t = time()
         self.t_print = t  # print régulier
         self.t_count = t  # Affichage fréquence régulier
         self.count = 0
@@ -167,14 +169,16 @@ class GameManagement():
 
         self.pile_to_players()
         self.update_level()
-
-        #if self.scene == "play":
         self.update_classement()
-
         self.update_rank()
 
     def update_level(self):
+        '''Mise à jour du level et
+        bloquage des scores 2s si changement.
+        '''
+
         l = len(self.players)
+
         if l == 0:
             l = 1
         self.level = l
@@ -264,6 +268,7 @@ class GameManagement():
         score = []  # liste
         for k, v in self.players.items():
             score.append(v["my_score"])
+
         return score
 
     def get_bat(self):
