@@ -29,7 +29,7 @@ Copyright (C) Labomedia May 2012
 Pour plus détails voir le fichier Copyright
 
 ### Détails
-Sur le wiki: [MultiPass For Freedom]()
+Sur le wiki: [MultiPass For Freedom]( https://github.com/sergeLabo/mpff/wiki)
 
 ### Multicast
 
