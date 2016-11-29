@@ -107,7 +107,6 @@ def get_bat_position():
 def get_reset():
     '''Avec la touches R, envoi sur capture name et rank.'''
 
-    # TODO R dans nom fait reset
     if gl.cube_obj["reset"]:
         print("Demande de reset au serveur")
         gl.cube_obj["reset"] = False

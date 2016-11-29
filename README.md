@@ -10,7 +10,6 @@ Cette version utilise [twisted](https://twistedmatrix.com/trac/) en python 3
 ### Genèse du jeu
 
 Ce jeu est un exercice sur les réseaux. Un jeu hyper simple créé dans Blender,
-
 et jusqu'à 10 joueurs sur un réseau local.
 
 Dans cette solution , le jeu dans Blender n'est pas simple. Il comporte 14 scènes,
@@ -51,7 +50,7 @@ sudo apt-get install blender
 ##### Dépendances
 
 ~~~text
- sudo apt-get install python3-dev python3-setuptools
+sudo apt-get install python3-dev python3-setuptools
 ~~~
 
 ##### Install
@@ -90,9 +89,6 @@ Il est possible de lancer plusieurs jeux sur le même PC, mais un seul jeu peut-
 - R = Reset
 - B = Replacer la balle
 - Haut Bas pour déplacer la raquette
-
-### Test en simulant des joueurs
-
 
 ### Bug connu
 
