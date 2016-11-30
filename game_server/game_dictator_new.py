@@ -387,14 +387,3 @@ class GameManagement():
             ##print()
 
             self.t_print = time()
-
-
-if __name__ == "__main__":
-    # utiliser mpff_player_simul
-    import os
-    from labtools.labconfig import MyConfig
-
-    scr = os.path.dirname(os.path.abspath(__file__))
-    conf = MyConfig(scr + "/mpff.ini")
-    my_conf = conf.conf
-    game = GameManagement(conf)

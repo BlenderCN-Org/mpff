@@ -136,7 +136,7 @@ def level_1_main(scenes):
     if gl.scene == "play":
         set_scene_play(scenes)
 
-    elif gl.scene == "rank":
+    if gl.scene == "rank":
         overlay_scene_rank(scenes)
         rank_display.main()
         display_rank_level1(scenes)
@@ -223,8 +223,11 @@ def reset_variables():
     '''Reset de variables pour repartir à zéro.'''
 
     print("Reset variables in game.py")
+    l = gl.level
+    if l == 1:
+        l = 2
     try:
-        for i in range(gl.level):
+        for i in range(l):
             gl.goal[i]["score"] = 10
     except:
         print("Goal non accessible")
