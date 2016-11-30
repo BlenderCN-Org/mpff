@@ -32,10 +32,9 @@ Sur le wiki: [MultiPass For Freedom]( https://github.com/sergeLabo/mpff/wiki)
 
 ### Multicast
 
-Tous les PC doivent être sur le même réseau local,
-avec un routeur qui supporte le multicast
+Tous les PC doivent être sur le même réseau local, avec un routeur qui supporte le multicast.
 
-###Testé sur
+### Testé sur
 
 Debian Jessie 8.3 avec Blender 2.72
 
