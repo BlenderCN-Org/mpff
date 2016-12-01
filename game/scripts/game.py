@@ -265,7 +265,7 @@ def automatic_bat(scenes):
                 y = 0.7 * gl.ball.localPosition[1]
                 gl.bat[1].localPosition = [9.5, y, 1]
             except:
-                print("Bat non accessible")
+                print("Automatic bat non accessible")
 
 def set_score():
     '''Maj des scores avec les valeurs du server.'''
@@ -286,12 +286,18 @@ def other_bat_position():
     for player in range(gl.level):
         try:
             if player != gl.I_am:
-            # les clés de gl.bat_position sont des str
+                # les clés de gl.bat_position du serveur sont des str
                 gl.bat[player].localPosition = [gl.bat_position[str(player)][0],
                                                 gl.bat_position[str(player)][1],
                                                 1]
         except:
-                print("Bat non accessible")
+            print("Bat non accessible")
+
+        ##if player != gl.I_am:
+            ### les clés de gl.bat_position du serveur sont des str
+            ##gl.bat[player].localPosition = [gl.bat_position[str(player)][0],
+                                            ##gl.bat_position[str(player)][1],
+                                            ##1]
 
 def positive_score():
     '''Tous les scores doivent être >= 0'''
@@ -336,8 +342,8 @@ def B_keys():
 def print_some():
     '''Print toutes les s des valeurs permettant de debugguer.'''
 
-    if gl.tempoDict["frame_60"].tempo == 300:
-        #print("FrameRate =", int(gl.getAverageFrameRate()))
+    if gl.tempoDict["frame_60"].tempo == 60:
+        print("FrameRate =", int(gl.getAverageFrameRate()))
         print(  "Mon nom: {}, mon n°: {}, scene: {}".format(\
                  gl.my_name[:-10], gl.I_am, gl.scene))
 

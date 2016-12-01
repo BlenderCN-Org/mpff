@@ -61,11 +61,36 @@ msg envoyé:
 
 from collections import OrderedDict
 from time import time, sleep
-from random import uniform
 import threading
 import json
 
 from labtools.labfifolist import PileFIFO
+from bat_simul import BatSimul
+
+
+SPEED = [2,2,2,2,2,2,2,2,2,2]
+
+UP = [  [0.41, -9.23],
+        [-5.05, -7.77],
+        [-8.40, -3.27],
+        [-8.95, 2.35],
+        [-5.66, 7.26],
+        [-0.88, 9.32],
+        [5.03, 7.71],
+        [8.40, -3.44],
+        [5.0, -7.73],
+        [-0.37, -9.21]]
+
+DOWN = [[-6.14, -7.1],
+        [-9.24, -2.01],
+        [-8.70, 3.45],
+        [-5.0, 7.79],
+        [0.65, 9.31],
+        [5.85, 7.27],
+        [8.79, 2.53],
+        [8.99, 3.36],
+        [8.7, -2.35],
+        [5.79, -7.21]]
 
 
 class GameManagement():
@@ -97,6 +122,14 @@ class GameManagement():
         self.count = 0
         self.pile_dict = {}
         self.len_pile = self.conf["pile"]["len_pile"]
+
+        # Simulation des bats level 10
+        if self.conf["simul"]["bat_simul"]:
+            self.bat_simul = []
+            for num in range(10):
+                sim = BatSimul(SPEED[num], DOWN[num][0], DOWN[num][1],
+                                             UP[num][0],   UP[num][1])
+                self.bat_simul.append(sim)
 
     def reset_data(self):
         '''Reset si demandé par un joueur avec R
@@ -292,10 +325,22 @@ class GameManagement():
         '''
 
         bat = {}  # dict
-        b = 0
-        for k, v in self.players.items():
-            bat[b] = v["bat_position"]
-            b += 1
+
+        if self.level != 10:
+            b = 0
+            for k, v in self.players.items():
+                bat[b] = v["bat_position"]
+                b += 1
+        else:
+            if self.conf["simul"]["bat_simul"]:
+                for num in range(10):
+                    bat[num] = self.bat_simul[num].bat
+            else:  # TODO nul répétition
+                b = 0
+                for k, v in self.players.items():
+                    bat[b] = v["bat_position"]
+                    b += 1
+
         return bat
 
     def get_who(self):

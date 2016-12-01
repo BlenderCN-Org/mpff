@@ -46,6 +46,7 @@ from scripts.labtools.labtcpclient import LabTcpClient
 from scripts import game
 from bge import logic as gl
 
+
 class MulticastClient(DatagramProtocol):
     '''Ce client reçoit les datas du serveur.'''
 
@@ -219,6 +220,9 @@ def init_variable():
     gl.level1_rated = 0 # si classement du level 1 fait dans game.py
     gl.classement_level1 = {}
     gl.tempo_rank_level1 = 0
+
+    # capture du nom
+    gl.name_capture = gl.conf["game"]["name_capture"]
 
 def init_blender_obj():
     '''Définit les variables qui permettront d'accéder aux objects de blender.

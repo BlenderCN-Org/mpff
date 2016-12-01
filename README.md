@@ -91,8 +91,16 @@ Il est possible de lancer plusieurs jeux sur le même PC, mais un seul jeu peut-
 
 ### Bug connu
 
-- Le serveur doit être lancé obligatoirement avant de lancer des jeux.
-- Les déconnexions ne sont pas gérées.
+* Le serveur doit être lancé obligatoirement avant de lancer des jeux.
+* Les déconnexions ne sont pas gérées.
+* Le retour au niveau 1 en fermant d'autres joueurs bloque.
+
+### TODO
+
+* Faire marcher les bats auto en niveau 10
+* Eclaicir les matériaux des scores
+* Aciver reset niveau 1
+* La Pile ne sert à rien, mais ne gêne pas
 
 ### Merci à:
 

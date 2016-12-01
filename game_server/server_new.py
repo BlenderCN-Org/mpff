@@ -40,6 +40,7 @@ from labtools.labsometools import get_my_ip
 
 from game_dictator_new import GameManagement
 
+
 # Variable globale
 scr = os.path.dirname(os.path.abspath(__file__))
 conf = MyConfig(scr + "/mpff.ini")

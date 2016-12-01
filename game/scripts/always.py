@@ -62,15 +62,23 @@ def name_capture():
     '''
 
     if not gl.my_name_ok:
-        if gl.name_obj['captured']:
-            # Get your name in Text prop
-            name = gl.name_obj['yourName']
+        if gl.name_capture:
+            if gl.name_obj['captured']:
+                # Get your name in Text prop
+                name = gl.name_obj['yourName']
 
-            # delete \n = Return
-            name = name.rstrip()
+                # delete \n = Return
+                name = name.rstrip()
 
+                # je suis à peu près sûr qu'il n'y aura pas 2 noms identiques
+                gl.my_name = name + str(int(time()))
+                gl.my_name_ok = 1
+                gl.scene = "play"
+                print("Mon nom est {}".format(gl.my_name))  #[:-10]))
+
+        else:
             # je suis à peu près sûr qu'il n'y aura pas 2 noms identiques
-            gl.my_name = name + str(int(time()))
+            gl.my_name = str(int(time()))
             gl.my_name_ok = 1
             gl.scene = "play"
             print("Mon nom est {}".format(gl.my_name))  #[:-10]))
