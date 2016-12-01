@@ -101,6 +101,7 @@ Il est possible de lancer plusieurs jeux sur le même PC, mais un seul jeu peut-
 * Eclaicir les matériaux des scores
 * Aciver reset niveau 1
 * La Pile ne sert à rien, mais ne gêne pas
+* Reset des scores pendant 2 s au changement de level
 
 ### Merci à:
 
