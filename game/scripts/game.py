@@ -63,10 +63,15 @@ def all_level_not_1_main(scenes):
         set_scene_play(scenes)
         positive_score()
         set_score()
-        other_bat_position()
+
+        if gl.level != 10:
+            other_bat_position()
+            bat_block()
+        else:
+            other_bat_position_level_10()
+
         ball_position()
         ball_out()
-        bat_block()
 
     if gl.scene == "rank":
         overlay_scene_rank(scenes)
@@ -293,11 +298,20 @@ def other_bat_position():
         except:
             print("Bat non accessible")
 
-        ##if player != gl.I_am:
-            ### les clés de gl.bat_position du serveur sont des str
-            ##gl.bat[player].localPosition = [gl.bat_position[str(player)][0],
-                                            ##gl.bat_position[str(player)][1],
-                                            ##1]
+def other_bat_position_level_10():
+    '''Défini les positions de toutes les raquettes,
+    avec valeur du server.
+    '''
+
+    for i in range(10):
+        try:
+            # les clés de gl.bat_position du serveur sont des str
+            # il faut respecter l'ordre des bat sinon mauvaise orientation
+            gl.bat[i].localPosition = [ gl.bat_position[str(i)][0],
+                                        gl.bat_position[str(i)][1],
+                                        1]
+        except:
+            print("Bat level 10 non accessible")
 
 def positive_score():
     '''Tous les scores doivent être >= 0'''
@@ -346,6 +360,7 @@ def print_some():
         print("FrameRate =", int(gl.getAverageFrameRate()))
         print(  "Mon nom: {}, mon n°: {}, scene: {}".format(\
                  gl.my_name[:-10], gl.I_am, gl.scene))
+        print(gl.bat_position)
 
 def set_help_resolution():
     '''Text resolution.'''

@@ -65,38 +65,16 @@ import threading
 import json
 
 from labtools.labfifolist import PileFIFO
-from bat_simul import BatSimul
-
-
-SPEED = [2,2,2,2,2,2,2,2,2,2]
-
-UP = [  [0.41, -9.23],
-        [-5.05, -7.77],
-        [-8.40, -3.27],
-        [-8.95, 2.35],
-        [-5.66, 7.26],
-        [-0.88, 9.32],
-        [5.03, 7.71],
-        [8.40, -3.44],
-        [5.0, -7.73],
-        [-0.37, -9.21]]
-
-DOWN = [[-6.14, -7.1],
-        [-9.24, -2.01],
-        [-8.70, 3.45],
-        [-5.0, 7.79],
-        [0.65, 9.31],
-        [5.85, 7.27],
-        [8.79, 2.53],
-        [8.99, 3.36],
-        [8.7, -2.35],
-        [5.79, -7.21]]
+from bat_simul import BatSimul, BAT_D
 
 
 class GameManagement():
     '''Gestion du jeu avec les datas envoyés par tous les joueurs'''
 
     def __init__(self, conf):
+
+        bat_d = BAT_D
+
         # Config du jeu
         self.conf = conf
 
@@ -127,8 +105,8 @@ class GameManagement():
         if self.conf["simul"]["bat_simul"]:
             self.bat_simul = []
             for num in range(10):
-                sim = BatSimul(SPEED[num], DOWN[num][0], DOWN[num][1],
-                                             UP[num][0],   UP[num][1])
+                sim = BatSimul(BAT_D[num][4], BAT_D[num][0], BAT_D[num][1],
+                                      BAT_D[num][2], BAT_D[num][3])
                 self.bat_simul.append(sim)
 
     def reset_data(self):
@@ -322,6 +300,9 @@ class GameManagement():
     def get_bat(self):
         '''Retourne la position des bats de tous les joueurs.
         Le dict est ordonné, j'ajoute les bats dans l'ordre.
+        Level 10: bat en auto. TODO méthode spéciale.
+        Les bat en auto n'ont pas d'ordre, il y en a 10,
+        donc plus de bat manuelle.
         '''
 
         bat = {}  # dict
