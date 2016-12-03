@@ -9,23 +9,17 @@ Cette version utilise [twisted](https://twistedmatrix.com/trac/) en python 3
 
 ### Genèse du jeu
 
-Ce jeu est un exercice sur les réseaux. Un jeu hyper simple créé dans Blender,
-et jusqu'à 10 joueurs sur un réseau local.
+Ce jeu est un exercice sur les réseaux. Un jeu hyper simple créé dans Blender, et jusqu'à 10 joueurs sur un réseau local.
 
-Dans cette solution , le jeu dans Blender n'est pas simple. Il comporte 14 scènes,
-les scènes x_players sont construites par copie de la plupart des objets, et un
-nommage qui permet facilement d'accéder aux objets de Blender dans les scripts python.
+Dans cette solution , le jeu dans Blender n'est pas simple. Il comporte 14 scènes, les scènes x_players sont construites par copie de la plupart des objets, et un nommage qui permet facilement d'accéder aux objets de Blender dans les scripts python.
 
-Les scripts python doivent être créés / modifiés dans un éditeur externe (par exemple Geany)
-et n'ont pas besoin d'être rechagés dans Blender. Seuls 2 scripts sont chargés
-dans Blender en tant que module, et ces scripts ne doivent jamais être modifiés,
-à savoir main_once.py et main_always.py
+Les scripts python doivent être créés / modifiés dans un éditeur externe (par exemple Geany) et n'ont pas besoin d'être rechagés dans Blender. Seuls 2 scripts sont chargés dans Blender en tant que module, et ces scripts ne doivent jamais être modifiés, à savoir main_once.py et main_always.py
 
 ### Copyright
 
 Copyright (C) Labomedia May 2012
 
-Pour plus détails voir le fichier Copyright
+Pour plus détails, voir le fichier Copyright
 
 ### Détails
 Sur le wiki: [MultiPass For Freedom]( https://github.com/sergeLabo/mpff/wiki)
@@ -89,6 +83,23 @@ Il est possible de lancer plusieurs jeux sur le même PC, mais un seul jeu peut-
 - B = Replacer la balle
 - Haut Bas pour déplacer la raquette
 
+### Test de 10 joueurs sur un seul PC
+
+Installer xterm
+
+~~~text
+sudo apt-get install xterm
+~~~
+
+Lancer un serveur avec clic_to_run_server, puis lancer avec clic_to_run_10_game
+Les raquettes se déplacent en auto.
+
+Il est possible de fermer tous les terminaux xterm avec:
+
+~~~text
+killall xterm
+~~~
+
 ### Bug connu
 
 * Le serveur doit être lancé obligatoirement avant de lancer des jeux.
@@ -97,14 +108,12 @@ Il est possible de lancer plusieurs jeux sur le même PC, mais un seul jeu peut-
 
 ### TODO
 
-* Faire marcher les bats auto en niveau 10
-* Eclaicir les matériaux des scores
-* Aciver reset niveau 1
+* Activer reset niveau 1
+* Débloquer le niveau 1 si retour à 1 joueur
 * La Pile ne sert à rien, mais ne gêne pas
-* Reset des scores (et des bat ?) pendant 2 s au changement de level sans reset de tout
 * Améliorer la physique de la balle, dans bullet
-
+* Faire marcher le reset de la balle avec B
 
 ### Merci à:
 
- - Labomedia
+* Labomedia

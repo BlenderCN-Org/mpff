@@ -48,14 +48,22 @@ players = [
 ]
 
 msg envoyé:
-{'dictat': {    'classement': {},
-                'score': [9, 8],
-                'who_are_you': {'gffgfg1456048734': 1, 'ggffg1456048730': 0},
-                'other_bat_position': {0: [-9.4, 0.0], 1: [9.4, 0.0]},
-                'level': 2,
-                'ball_position_server': [0.5, 3.3],
-                'scene': 'play'
-            }}
+lapin = {"paradis": {"ip": self.ip_server, "dictat": data}}
+et
+msg =   {   "level": self.level,
+            "scene" : self.scene,
+            "classement": self.classement,
+            "ball_position_server": self.get_ball(),
+            "score": self.get_score(),
+            "other_bat_position": self.get_bat(),
+            "who_are_you": self.get_who(),
+            "rank_end":   self.rank_end,
+            "reset": self.get_reset(),
+            "transit": self.transit  }
+
+lapin = {"paradis": {"ip": self.ip_server, "dictat": msg}}
+        ou
+lapin = {"paradis": {"ip": self.ip_server, "dictat": {'rien': 0}}}
 '''
 
 
@@ -73,6 +81,7 @@ class GameManagement():
 
     def __init__(self, conf):
 
+        # Dict des points pour auto level 10
         bat_d = BAT_D
 
         # Config du jeu
@@ -92,7 +101,9 @@ class GameManagement():
         self.classement = {}
         self.level = 0
         self.t_reset = 0
-        #self.t_level_0 = t
+        self.transit = 0 # pour bloquage des jeux si level change
+        self.t_transit = t
+        self.tempo_transit = 5
 
         # Spécifique protocol twisted 3
         self.t_print = t  # print régulier
@@ -198,18 +209,35 @@ class GameManagement():
 
         self.pile_to_players()
         self.update_level()
+        self.update_transit()
         self.update_classement()
         self.update_rank()
 
-    def update_level(self):
-        '''Mise à jour du level et
-        bloquage des scores 2s si changement.
+    def update_transit(self):
+        '''Si transit:
+        - bloquage des scores à 10
+        - bloquage balle à 1, 1
+        - pas de bloquage des bats
+        - question ? ajout d'une scène black en overlay ?
         '''
 
+        if self.transit:
+            if time() - self.t_transit > self.tempo_transit:
+                self.transit = 0
+
+    def update_level(self):
+        '''Mise à jour du level.'''
+
+        level_old = self.level
         l = len(self.players)
 
         if l == 0:
             l = 1
+
+        if level_old != l:
+            self.transit = 1
+            self.t_transit = time()
+
         self.level = l
 
     def update_rank(self):
@@ -278,11 +306,14 @@ class GameManagement():
         '''Retourne la position de la balle du premier joueur dans players dict.
         '''
 
-        ball = [0, 0]  # liste
+        ball = [1, 1]  # liste
         for k, v in self.players.items():
             ball = v["ball_position"]
             # j'ai lu le premier dans le dict, sa balle sert pour les autres
             break
+
+        if self.transit:
+            ball = [1, 1]
 
         return ball
 
@@ -294,6 +325,9 @@ class GameManagement():
         score = []  # liste
         for k, v in self.players.items():
             score.append(v["my_score"])
+
+        if self.transit: # sert à rien fait dans le jeu
+            score = [10] * self.level
 
         return score
 
@@ -373,7 +407,8 @@ class GameManagement():
                         "other_bat_position": self.get_bat(),
                         "who_are_you": self.get_who(),
                         "rank_end":   self.rank_end,
-                        "reset": self.get_reset()  }
+                        "reset": self.get_reset(),
+                        "transit": self.transit  }
         else:
             msg = {"rien": 0}
 

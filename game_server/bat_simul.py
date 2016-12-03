@@ -3,6 +3,31 @@
 
 ## player_simul.py
 
+#############################################################################
+# Copyright (C) Labomedia November 2012
+#
+#  This program is free software; you can redistribute it and/or
+#  modify it under the terms of the GNU General Public License
+#  as published by the Free Software Foundation; either version 2
+#  of the License, or (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program; if not, write to the Free Software Foundation,
+#  Inc., 51 Franproplin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+#
+#############################################################################
+
+'''
+Simulation des raquettes pour le niveau 10, les raquettes se déplacent
+de x1, y1 à x2, y2 en sec secondes.
+
+'''
+
 
 from time import sleep
 import threading
@@ -17,7 +42,7 @@ BAT_D = {   0 : (-0.45, -8.93, -4.89, -7.49, 2),    # cas 2
             5 : ( 0.48,  8.92,  4.83,  7.50, 5.5),
             6 : ( 8.25,  3.26,  5.63,  6.96, 1.5),
             7 : ( 8.70, -2.35,  8.40,  2.27, 1.0),  # cas 2
-            8 : ( 8.32, -3.18,  5.58, -6.95, 6.5),  # cas 3
+            8 : ( 8.32, -3.18,  5.58, -6.95, 0.5),  # cas 3
             9 : ( 4.83, -7.50,  0.44, -8.94, 7)   } # cas 3
 
 

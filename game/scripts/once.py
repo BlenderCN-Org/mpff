@@ -129,6 +129,8 @@ class MulticastClient(DatagramProtocol):
         if "classement" in data:
             gl.classement = data["classement"]
 
+        if "transit" in data:
+            gl.transit = data["transit"]
 
 def datagram_decode(datagram):
     '''Decode la réception qui est des bytes, pour obtenir un dict.
@@ -190,18 +192,18 @@ def init_variable():
     gl.classement =  {}  # {'toto': 3, 'labomedia': 2, 'gddgsg': 1}
 
     # vient du server
-    gl.ball_position_server = [0,0] # liste
-    gl.score = [0,0,0,0,0,0,0,0,0,0] # liste
-    gl.bat_position = { 0: [0,0],   # dict !!
-                        1: [0,0],
-                        2: [0,0],
-                        3: [0,0],
-                        4: [0,0],
-                        5: [0,0],
-                        6: [0,0],
-                        7: [0,0],
-                        8: [0,0],
-                        9: [0,0]}
+    gl.ball_position_server = [0, 0] # liste
+    gl.score = [0] * 10 # liste
+    gl.bat_position = { 0: [0, 0],   # dict !!
+                        1: [0, 0],
+                        2: [0, 0],
+                        3: [0, 0],
+                        4: [0, 0],
+                        5: [0, 0],
+                        6: [0, 0],
+                        7: [0, 0],
+                        8: [0, 0],
+                        9: [0, 0]}
 
     # Scene Name
     gl.my_name = ""
@@ -223,6 +225,9 @@ def init_variable():
 
     # capture du nom
     gl.name_capture = gl.conf["game"]["name_capture"]
+
+    # gestion du changement du nombre de joueur
+    gl.transit = 0
 
 def init_blender_obj():
     '''Définit les variables qui permettront d'accéder aux objects de blender.

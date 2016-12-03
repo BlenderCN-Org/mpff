@@ -155,27 +155,6 @@ def level_1_main(scenes):
     if gl.level1_rated == 0:
         automatic_bat(scenes)
 
-def bat_block():
-    '''Bloque ou active ma bat.
-    - Active ma bat ou début d'une partie.
-    - Bloque ma bat si j'ai perdu, donc que mon score = 0
-    '''
-
-    try:
-        if gl.goal[gl.I_am]["score"] == 0:
-            gl.block = 1
-        elif gl.goal[1]["score"] == 0 and gl.level == 1:
-            gl.block = 1
-        else:
-            gl.block = 0
-
-        if gl.block == 0:
-            gl.bat[gl.I_am]["activ"] = 1
-        if gl.block == 1:
-            gl.bat[gl.I_am]["activ"] = 0
-    except:
-        print("Bat et goal non accessible  ")
-
 def classement_level1(scenes):
     '''Classement du joueur et de la machine au niveau 1. 2 Cas:'''
 
@@ -215,6 +194,27 @@ def display_rank_level1(scenes):
         # Fin de la scène rank
         del_rank_scene(scenes)
         reset_variables()
+
+def bat_block():
+    '''Bloque ou active ma bat.
+    - Active ma bat ou début d'une partie.
+    - Bloque ma bat si j'ai perdu, donc que mon score = 0
+    '''
+
+    try:
+        if gl.goal[gl.I_am]["score"] == 0:
+            gl.block = 1
+        elif gl.goal[1]["score"] == 0 and gl.level == 1:
+            gl.block = 1
+        else:
+            gl.block = 0
+
+        if gl.block == 0:
+            gl.bat[gl.I_am]["activ"] = 1
+        if gl.block == 1:
+            gl.bat[gl.I_am]["activ"] = 0
+    except:
+        print("Bat et goal non accessible  ")
 
 def del_rank_scene(scenes):
     '''Supprime la scène rank.'''
@@ -283,6 +283,13 @@ def set_score():
                 except:
                     print("Goal non accessible")
 
+    if gl.transit:
+        # set des scores à 10
+        try:
+            gl.goal[gl.I_am]["score"] = 10
+        except:
+            print("Mon goal non accessible")
+
 def other_bat_position():
     '''Définir les positions des raquettes des autres joueurs, pas pour moi,
     avec valeur du server.
@@ -339,6 +346,10 @@ def ball_position():
         gl.ball["master"] = False
         # Set position
         gl.ball.localPosition = [gl.ball_position_server[0], gl.ball_position_server[1], 1]
+
+    if gl.transit:
+        # bloquage de la balle à 1, 1
+        gl.ball.localPosition = [1, 1, 1]
 
 def B_keys():
     '''Pour la touches B, replacement de la balle.
