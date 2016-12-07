@@ -24,3 +24,5 @@ target/
 # other
 .idea/
 old/
+
+server_simul/

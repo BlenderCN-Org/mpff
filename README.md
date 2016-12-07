@@ -13,7 +13,7 @@ Ce jeu est un exercice sur les réseaux. Un jeu hyper simple créé dans Blender
 
 Dans cette solution , le jeu dans Blender n'est pas simple. Il comporte 14 scènes, les scènes x_players sont construites par copie de la plupart des objets, et un nommage qui permet facilement d'accéder aux objets de Blender dans les scripts python.
 
-Les scripts python doivent être créés / modifiés dans un éditeur externe (par exemple Geany) et n'ont pas besoin d'être rechagés dans Blender. Seuls 2 scripts sont chargés dans Blender en tant que module, et ces scripts ne doivent jamais être modifiés, à savoir main_once.py et main_always.py
+Les scripts python doivent être créés / modifiés dans un éditeur externe (par exemple Geany) et n'ont pas besoin d'être rechargés dans Blender. Seuls 2 scripts sont chargés dans Blender en tant que module, et ces scripts ne doivent jamais être modifiés, à savoir main_once.py et main_always.py
 
 ### Copyright
 

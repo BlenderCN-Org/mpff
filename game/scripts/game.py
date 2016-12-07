@@ -244,6 +244,7 @@ def reset_variables():
     # Le dictionnaire de classement des joueurs
     gl.classement = {}
     gl.block = 0
+    gl.transit = 0
     gl.scene = "play"
 
 def ball_out():

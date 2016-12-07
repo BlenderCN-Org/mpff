@@ -28,6 +28,9 @@ Il ne tourne qu'une seule fois pour initier las variables
 qui seront toutes des attributs du bge.logic (gl)
 Seuls les attributs de logic sont stockés en permanence.
 
+Un thread est crée pour recevoir le multicast, puis après avoir reçu l'adresse
+ip du serveur sur ce multicast, lancement d'un socket TCP pour envoyer.
+
 '''
 
 
@@ -66,7 +69,11 @@ class MulticastClient(DatagramProtocol):
             self.datagram_sorting(data)
 
     def datagram_sorting(self, data_dict):
-        '''Met à jour les variables avec les valeurs reçues. data = dict'''
+        '''Met à jour les variables avec les valeurs reçues. data = dict =
+        {"paradis": {"ip": self.ip_server, "dictat": data}}
+        ou
+        {"paradis": {"ip": self.ip_server, "dictat": {'rien': 0}}}
+        '''
 
         data = data_dict["paradis"]
 
@@ -75,12 +82,18 @@ class MulticastClient(DatagramProtocol):
 
         if "dictat" in data:
             data = data["dictat"]
+
             if data:
                 if gl.scene == "play" or gl.scene == "rank":
                     self.tri_msg(data)
 
     def tri_msg(self, data):
         '''Set des variables attributs du game logic.'''
+
+        # TODO marche pas
+        ##if "rien" in data:
+            ##gl.level = 1
+            ##gl.transit = 0
 
         if "level" in data:
             gl.level = data["level"]
@@ -131,6 +144,7 @@ class MulticastClient(DatagramProtocol):
 
         if "transit" in data:
             gl.transit = data["transit"]
+
 
 def datagram_decode(datagram):
     '''Decode la réception qui est des bytes, pour obtenir un dict.

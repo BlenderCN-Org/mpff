@@ -77,7 +77,7 @@ from bat_simul import BatSimul, BAT_D
 
 
 class GameManagement():
-    '''Gestion du jeu avec les datas envoyés par tous les joueurs'''
+    '''Gestion du jeu avec les datas envoyés par tous les joueurs.'''
 
     def __init__(self, conf):
 
