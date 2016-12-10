@@ -103,7 +103,7 @@ class GameManagement():
         self.t_reset = 0
         self.transit = 0 # pour bloquage des jeux si level change
         self.t_transit = t
-        self.tempo_transit = 5
+        self.tempo_transit = 2
 
         # Spécifique protocol twisted 3
         self.t_print = t  # print régulier
@@ -410,7 +410,7 @@ class GameManagement():
                         "reset": self.get_reset(),
                         "transit": self.transit  }
         else:
-            msg = {"rien": 0}
+            msg = {"level": 1}
 
         self.print_some(msg)
 

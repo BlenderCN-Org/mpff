@@ -76,12 +76,14 @@ def get_my_score():
 
 def get_bat_position():
     '''Retourne la position x, y de ma bat, je suis 0.'''
+
     try:
         x = gl.bat[0].localPosition[0]
         y = gl.bat[0].localPosition[1]
     except:
         x, y = 0, 0
-    return [round(x, 2), round(y, 2)]
+    #return [round(x, 2), round(y, 2)]
+    return [x, y]
 
 def get_ball_position():
     '''Retourne la position x, y de ma balle donnée par le moteur physique.
@@ -92,7 +94,8 @@ def get_ball_position():
         y = gl.ball.localPosition[1]
     except:
         x, y = 2, 2
-    return [round(x, 2), round(y, 2)]
+    #return [round(x, 2), round(y, 2)]
+    return [x, y]
 
 def get_bat_position():
     '''Position x, y de ma bat.'''
@@ -102,7 +105,8 @@ def get_bat_position():
         y = gl.bat[gl.I_am].localPosition[1]
     except:
         x, y = 0, 0
-    return [round(x, 2), round(y, 2)]
+    #return [round(x, 2), round(y, 2)]
+    return [x, y]
 
 def get_reset():
     '''Avec la touches R, envoi sur capture name et rank.'''

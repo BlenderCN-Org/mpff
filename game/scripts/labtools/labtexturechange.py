@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: UTF-8 -*-
 
-## labTextureChange.py
+## labtexturechange.py
 
 #############################################################################
 # Copyright (C) SergeBlender October 2016
@@ -23,7 +23,8 @@
 #############################################################################
 
 """
-Class générique qui permet de changer la texture d'un objet
+Class générique qui permet de changer la texture d'un objet.
+Ce script ne peut tourner que dans blender.
 """
 
 from bge import logic as gl
@@ -31,13 +32,15 @@ from bge import texture
 
 class TextureChange():
     ''' Classe générique utilisable dans d'autres projects,
-        pour changer une texture image.'''
+        pour changer une texture d'un objet.
+    '''
 
     def __init__(self, obj, old_tex):
         ''' obj     = objet concerné
-            old_tex = texture originale
-            new_tex = nouvelle texture '''
-        self.obj = obj
+            old_tex = image de la texture originale, ex "danseur2.png"
+            new_tex = "//textures/perso.png"
+        '''
+
         self.old_tex = old_tex
         # ID de la texture existante
         self.ID = texture.materialID(obj, 'IM' + old_tex)
@@ -45,20 +48,20 @@ class TextureChange():
         self.obj_texture = texture.Texture(obj, self.ID)
 
     def texture_new(self, new_tex):
-        ''' Application de la nouvelle texture'''
+        ''' Application de la nouvelle image de la texture.'''
 
         # Nouvelle source
-        self.url = gl.expandPath(new_tex)
-        print("Path du fichier", new_tex, "=", self.url)
-        self.new_source = texture.ImageFFmpeg(self.url)
+        url = gl.expandPath(new_tex)
+        print("Path du fichier", new_tex, "=", url)
+
+        new_source = texture.ImageFFmpeg(url)
 
         # Remplacement
-        self.obj_texture.source = self.new_source
+        self.obj_texture.source = new_source
         self.obj_texture.refresh(False)
 
     def texture2old(self):
-        ''' Effacement de l'objet python, pour retourner à l'ancienne texture
-            Cette fonction n'a jamais été utilisée !
+        ''' Effacement de l'objet python, pour retourner à l'ancienne texture.
         '''
 
         try:

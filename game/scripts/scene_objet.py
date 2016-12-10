@@ -64,6 +64,9 @@ def main():
                     # Get goal
                     if str(obj) == "goal" + str(gl.level) + str(n):
                         gl.goal[n] = obj
+                    # Get cache
+                    if str(obj) == "cache" + str(gl.level) + str(n):
+                        gl.cache[n] = obj
 
         if "Name" in scn.name:
             for obj in scn.objects:

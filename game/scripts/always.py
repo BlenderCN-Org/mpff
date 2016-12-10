@@ -71,14 +71,15 @@ def name_capture():
                 name = name.rstrip()
 
                 # je suis à peu près sûr qu'il n'y aura pas 2 noms identiques
-                gl.my_name = name + str(int(time()))
+                gl.my_name = name + str(int(time()))[-4:]
                 gl.my_name_ok = 1
                 gl.scene = "play"
                 print("Mon nom est {}".format(gl.my_name))  #[:-10]))
 
         else:
+            # nom automatique uniquement avec le temps
             # je suis à peu près sûr qu'il n'y aura pas 2 noms identiques
-            gl.my_name = str(int(time()))
+            gl.my_name = str(int(time()))[-4:]
             gl.my_name_ok = 1
             gl.scene = "play"
             print("Mon nom est {}".format(gl.my_name))  #[:-10]))

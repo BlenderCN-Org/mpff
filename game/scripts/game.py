@@ -37,6 +37,7 @@ from time import sleep
 from random import uniform
 from scripts import rank_display
 from scripts import message
+from scripts.labtools.labtexturechange import TextureChange
 
 
 def main():
@@ -48,7 +49,7 @@ def main():
     # Balle au centre
     B_keys()
 
-    print_some()
+    #print_some()
     set_help_resolution()
 
     # si mon nom a été capturé
@@ -58,7 +59,25 @@ def main():
         else:
             all_level_not_1_main(scenes)
 
+def cache_visible():
+    '''Le cache rouge visible rend la bat rouge.'''
+
+    try:
+        # la mienne est visible
+        obj = gl.cache[gl.I_am]
+        obj.visible = 1
+        # les autres sont invisibles
+        for i in range(gl.level):
+            if i != gl.I_am:
+                obj = gl.cache[i]
+                obj.visible = 0
+    except:
+        #print("Pas de cache accessible")
+        pass
+
 def all_level_not_1_main(scenes):
+    '''Tous les niveaux sauf le 1 qui n'est pas géré par le serveur.'''
+
     if gl.scene == "play":
         set_scene_play(scenes)
         positive_score()
@@ -72,6 +91,7 @@ def all_level_not_1_main(scenes):
 
         ball_position()
         ball_out()
+        cache_visible()
 
     if gl.scene == "rank":
         overlay_scene_rank(scenes)
@@ -100,6 +120,8 @@ def set_good_level_scene(scenes):
 
     # Si la scène n'est pas ok
     if scene_ok == 0:
+        # Reset du cache
+        #gl.cache_apply = 0
 
         # Suppression de la mauvaise scène en cours, c'est forcément une scène avec "_players"
         for n in range(1, 11):
@@ -107,6 +129,7 @@ def set_good_level_scene(scenes):
                 if scn.name == str(n) + "_players" :
                     scn.end()
                     print("Suppression de la scène", str(n) + "_players")
+
         # Lancement du bon niveau
         overlay_scene(str(gl.level) + "_players")
         # Je viens de demander l'ajout de la scène, elle ne sera effective qu'à la frame suivante
@@ -149,6 +172,7 @@ def level_1_main(scenes):
     positive_score()
     set_score()
     bat_block()
+    cache_visible()
     ball_out()
     classement_level1(scenes)
     # La bat auto est active si pas de scène rank
@@ -246,6 +270,7 @@ def reset_variables():
     gl.block = 0
     gl.transit = 0
     gl.scene = "play"
+    gl.I_am = 0
 
 def ball_out():
     '''Remet la Ball dans le jeu si la balle sort du jeu.'''
@@ -369,10 +394,10 @@ def print_some():
     '''Print toutes les s des valeurs permettant de debugguer.'''
 
     if gl.tempoDict["frame_60"].tempo == 60:
-        print("FrameRate =", int(gl.getAverageFrameRate()))
+        #print("FrameRate =", int(gl.getAverageFrameRate()))
+        #print(gl.bat_position)
         print(  "Mon nom: {}, mon n°: {}, scene: {}".format(\
                  gl.my_name[:-10], gl.I_am, gl.scene))
-        print(gl.bat_position)
 
 def set_help_resolution():
     '''Text resolution.'''

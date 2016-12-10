@@ -65,6 +65,7 @@ class MulticastClient(DatagramProtocol):
         '''Réception, demande de traitement.'''
 
         data = datagram_decode(datagram)
+
         if data:
             self.datagram_sorting(data)
 
@@ -72,7 +73,7 @@ class MulticastClient(DatagramProtocol):
         '''Met à jour les variables avec les valeurs reçues. data = dict =
         {"paradis": {"ip": self.ip_server, "dictat": data}}
         ou
-        {"paradis": {"ip": self.ip_server, "dictat": {'rien': 0}}}
+        {"paradis": {"ip": self.ip_server, "dictat": {"level": 1}}}
         '''
 
         data = data_dict["paradis"]
@@ -92,6 +93,7 @@ class MulticastClient(DatagramProtocol):
 
         # TODO marche pas
         ##if "rien" in data:
+            ##print("rien")
             ##gl.level = 1
             ##gl.transit = 0
 
@@ -277,6 +279,18 @@ def init_blender_obj():
                 7 : 7,
                 8 : 8,
                 9 : 9}
+
+    # All cache
+    gl.cache = {    0 : 0,
+                    1 : 1,
+                    2 : 2,
+                    3 : 3,
+                    4 : 4,
+                    5 : 5,
+                    6 : 6,
+                    7 : 7,
+                    8 : 8,
+                    9 : 9}
 
     gl.ball = 0  # mon objet blender ball
 
