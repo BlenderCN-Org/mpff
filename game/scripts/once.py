@@ -91,11 +91,11 @@ class MulticastClient(DatagramProtocol):
     def tri_msg(self, data):
         '''Set des variables attributs du game logic.'''
 
-        # TODO marche pas
-        ##if "rien" in data:
-            ##print("rien")
+        ##if "level" in data:
             ##gl.level = 1
             ##gl.transit = 0
+            ### reset une seule fois
+            ##gl.reset += 1
 
         if "level" in data:
             gl.level = data["level"]
@@ -238,6 +238,7 @@ def init_variable():
     gl.level1_rated = 0 # si classement du level 1 fait dans game.py
     gl.classement_level1 = {}
     gl.tempo_rank_level1 = 0
+    gl.reset = 0
 
     # capture du nom
     gl.name_capture = gl.conf["game"]["name_capture"]

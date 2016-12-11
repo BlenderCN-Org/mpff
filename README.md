@@ -104,15 +104,13 @@ killall xterm
 
 * Le serveur doit être lancé obligatoirement avant de lancer des jeux.
 * Les déconnexions ne sont pas gérées.
-* Le retour au niveau 1 en fermant d'autres joueurs bloque.
+* Le retour au niveau 1 en fermant d'autres joueurs marche mal, mais reset ok.
 
 ### TODO
 
-* Activer reset niveau 1
 * Débloquer le niveau 1 si retour à 1 joueur
 * La Pile ne sert à rien, mais ne gêne pas
-* Améliorer la physique de la balle, dans bullet
-* Faire marcher le reset de la balle avec B
+
 
 ### Merci à:
 

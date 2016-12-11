@@ -112,6 +112,7 @@ def get_reset():
     '''Avec la touches R, envoi sur capture name et rank.'''
 
     if gl.cube_obj["reset"]:
+        gl.reset = 1
         print("Demande de reset au serveur")
         gl.cube_obj["reset"] = False
         # Envoi au server de {"reset": 1}

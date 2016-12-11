@@ -175,12 +175,19 @@ def level_1_main(scenes):
     cache_visible()
     ball_out()
     classement_level1(scenes)
+
     # La bat auto est active si pas de scène rank
     if gl.level1_rated == 0:
         automatic_bat(scenes)
 
+    # Retour au level 1 sans bug
+    if gl.reset:
+        reset_variables()
+
 def classement_level1(scenes):
-    '''Classement du joueur et de la machine au niveau 1. 2 Cas:'''
+    '''Classement du joueur et de la machine au niveau 1.
+    2 Cas:
+    '''
 
     if gl.goal[0] and gl.goal[1]:
         if gl.level1_rated == 0:
@@ -265,12 +272,12 @@ def reset_variables():
     gl.level1_rated = 0
     gl.classement_level1 = {}
     gl.tempo_rank_level1 = 0
-    # Le dictionnaire de classement des joueurs
     gl.classement = {}
     gl.block = 0
     gl.transit = 0
     gl.scene = "play"
     gl.I_am = 0
+    gl.level = 1
 
 def ball_out():
     '''Remet la Ball dans le jeu si la balle sort du jeu.'''
