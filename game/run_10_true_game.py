@@ -6,7 +6,7 @@
 import subprocess
 from time import sleep
 
-players = 10
+players = 9
 
 for i in range(players):
     one_sp = subprocess.Popen(['xterm', '-e', 'blenderplayer MPFF.blend'], shell=False)

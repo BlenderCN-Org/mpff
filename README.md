@@ -104,13 +104,12 @@ killall xterm
 
 * Le serveur doit être lancé obligatoirement avant de lancer des jeux.
 * Les déconnexions ne sont pas gérées.
-* Le retour au niveau 1 en fermant d'autres joueurs marche mal, mais reset ok.
 
 ### TODO
 
-* Débloquer le niveau 1 si retour à 1 joueur
 * La Pile ne sert à rien, mais ne gêne pas
-
+* Globalement beaucoup de fonctions sont très perfectibles
+* Gérer le niveau 1 par le serveur
 
 ### Merci à:
 

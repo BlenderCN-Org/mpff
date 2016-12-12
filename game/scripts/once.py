@@ -97,6 +97,11 @@ class MulticastClient(DatagramProtocol):
             # seulement 10 scenes de jeu
             if gl.level < 1:
                 gl.level = 1
+
+            if gl.level == 1:
+                # Correction bug retour level 1
+                gl.I_am = 0
+
             if gl.level > 10:
                 gl.level = 10
 

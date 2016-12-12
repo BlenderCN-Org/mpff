@@ -49,7 +49,7 @@ def main():
     # Balle au centre
     B_keys()
 
-    #print_some()
+    print_some()
     set_help_resolution()
 
     # si mon nom a été capturé
@@ -403,8 +403,7 @@ def print_some():
     if gl.tempoDict["frame_60"].tempo == 60:
         #print("FrameRate =", int(gl.getAverageFrameRate()))
         #print(gl.bat_position)
-        print(  "Mon nom: {}, mon n°: {}, scene: {}".format(\
-                 gl.my_name[:-10], gl.I_am, gl.scene))
+        print(  "Je suis: {}, level {}".format(gl.I_am, gl.level))
 
 def set_help_resolution():
     '''Text resolution.'''
