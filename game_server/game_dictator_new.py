@@ -399,18 +399,20 @@ class GameManagement():
 
         # Je regroupe tout
         if self.level > 1:
-            msg =   {   "level": self.level,
-                        "scene" : self.scene,
-                        "classement": self.classement,
-                        "ball_position_server": self.get_ball(),
-                        "score": self.get_score(),
-                        "other_bat_position": self.get_bat(),
-                        "who_are_you": self.get_who(),
-                        "rank_end":   self.rank_end,
-                        "reset": self.get_reset(),
-                        "transit": self.transit  }
+            msg = { "level": self.level,
+                    "scene" : self.scene,
+                    "classement": self.classement,
+                    "ball_position_server": self.get_ball(),
+                    "score": self.get_score(),
+                    "other_bat_position": self.get_bat(),
+                    "who_are_you": self.get_who(),
+                    "rank_end":   self.rank_end,
+                    "reset": self.get_reset(),
+                    "transit": self.transit  }
         else:
-            msg = {"level": 1}
+            msg = { "level": self.level,
+                    "transit": self.transit,
+                    "reset": self.get_reset()}
 
         self.print_some(msg)
 

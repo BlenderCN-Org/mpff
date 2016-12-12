@@ -91,12 +91,6 @@ class MulticastClient(DatagramProtocol):
     def tri_msg(self, data):
         '''Set des variables attributs du game logic.'''
 
-        ##if "level" in data:
-            ##gl.level = 1
-            ##gl.transit = 0
-            ### reset une seule fois
-            ##gl.reset += 1
-
         if "level" in data:
             gl.level = data["level"]
             # TODO fonction dans game
