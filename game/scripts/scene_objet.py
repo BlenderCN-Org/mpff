@@ -37,8 +37,7 @@ Fort de café !
 '''
 
 
-import GameLogic as gl
-
+from bge import logic as gl
 
 
 def main():

@@ -85,20 +85,32 @@ Il est possible de lancer plusieurs jeux sur le même PC, mais un seul jeu peut-
 
 ### Test de 10 joueurs sur un seul PC
 
-Installer xterm
+#####Installer xterm
 
 ~~~text
 sudo apt-get install xterm
 ~~~
 
+##### Modifier mpff.ini
+
+Définir
+
+name_capture = 0
+
 Lancer un serveur avec clic_to_run_server, puis lancer avec clic_to_run_10_game
-Les raquettes se déplacent en auto.
+Toutes les raquettes se déplacent en auto. Il n'est pas possible de jouer.
 
 Il est possible de fermer tous les terminaux xterm avec:
 
 ~~~text
 killall xterm
 ~~~
+
+Remettre
+
+name_capture = 0
+
+quand vous avez fini de vous amuser !
 
 ### Bug connu
 

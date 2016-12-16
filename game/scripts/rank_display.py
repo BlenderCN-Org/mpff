@@ -30,7 +30,7 @@ Crée et applique le texte du classement à chaque frame
 
 
 
-import GameLogic as gl
+from bge import logic as gl
 
 # avec
 # gl.classement = {'toto': 3, 'labomedia': 2, 'gddgsg': 1}
@@ -67,9 +67,12 @@ def create_text():
     b = 0
     for key, value in gl.classement.items():
         if value > 0:
-            # \n\n crée les sauts de ligne
+            if key != "machine":
+                # je coupe les entiers du time(), machine n'a pas de time()
+                key = key[:-4]
             if len(key) > 11:
                 key = key[:-10]
+            # \n\n crée les sauts de ligne
             text_list[value - 1] = str(value) + " .   " + str(key) + "\n\n"
             b += 1
 

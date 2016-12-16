@@ -31,18 +31,18 @@ de x1, y1 à x2, y2 en sec secondes.
 
 from time import sleep
 import threading
-
+from decimal import *
 
 #                  x1     y1     x2     y2   sec
-BAT_D = {   0 : (-0.45, -8.93, -4.89, -7.49, 3),    # cas 2
-            1 : (-8.95, -2.35, -5.55, -6.98, 0.5),    # cas
-            2 : (-8.70,  2.29, -8.60, -2.35, 2),  # cas 4
-            3 : (-8.34,  3.19, -5.55,  6.97, 10),  # cas 1
+BAT_D = {   0 : (-0.45, -8.93, -4.89, -7.49, 0.3),    # cas 2
+            1 : (-8.95, -2.35, -5.55, -6.98, 7),    # cas
+            2 : (-8.70,  2.29, -8.60, -2.35, 10),  # cas 4
+            3 : (-8.34,  3.19, -5.55,  6.97, 0.4),  # cas 1
             4 : (-0.45,  8.94, -4.87,  7.50, 4),    # cas 4
-            5 : ( 0.48,  8.92,  4.83,  7.50, 0.3),
-            6 : ( 8.25,  3.26,  5.63,  6.96, 0.4),
-            7 : ( 8.70, -2.35,  8.60,  2.27, 15),  # cas 2
-            8 : ( 8.32, -3.18,  5.58, -6.95, 7),  # cas 3
+            5 : ( 0.48,  8.92,  4.83,  7.50, 3),
+            6 : ( 8.25,  3.26,  5.63,  6.96, 15),
+            7 : ( 8.70, -2.35,  8.60,  2.27, 2),  # cas 2
+            8 : ( 8.32, -3.18,  5.58, -6.95, 0.5),  # cas 3
             9 : ( 4.83, -7.50,  0.44, -8.94, 20)   } # cas 3
 
 
@@ -62,9 +62,10 @@ class BatSimul:
 
         # déplacement par frame
         if sec != 0:
-            bat_speed = 1 / (60 * sec)
+            getcontext().prec = 16
+            bat_speed = Decimal(1) / Decimal((60 * Decimal(sec)))
         else:
-            bat_speed = 1
+            bat_speed = Decimal(1)
 
         self.sens_x = 1
         self.sens_y = 1
@@ -72,8 +73,8 @@ class BatSimul:
         self.y1 = y1
         self.x2 = x2
         self.y2 = y2
-        self.dx = abs(x2 - x1) * bat_speed
-        self.dy = abs(y2 - y1) * bat_speed
+        self.dx = Decimal(abs(x2 - x1)) * bat_speed
+        self.dy = Decimal(abs(y2 - y1)) * bat_speed
 
         self.animation_thread()
 
@@ -90,11 +91,11 @@ class BatSimul:
         '''La bat va de x1,y1 à x2,y2 en self.bat_speed secondes par frames
         et retour.'''
 
-        x = self.bat[0]
-        y = self.bat[1]
+        x = Decimal(self.bat[0])
+        y = Decimal(self.bat[1])
 
-        x += self.sens_x * self.dx
-        y += self.sens_y * self.dy
+        x += Decimal(self.sens_x) * self.dx
+        y += Decimal(self.sens_y) * self.dy
 
         # cas 1
         if self.x1 < self.x2 and self.y1 < self.y2:
@@ -140,8 +141,8 @@ class BatSimul:
                 self.sens_x = 1
                 self.sens_y = -1
 
-        self.bat[0] = x
-        self.bat[1] = y
+        self.bat[0] = float(x)
+        self.bat[1] = float(y)
 
 
 if __name__ == "__main__":

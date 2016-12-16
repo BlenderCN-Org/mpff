@@ -32,7 +32,7 @@ dans les scènes à l'instant où ils sont appelés.
 L'important est qu'il n'y ait pas de pass
 '''
 
-import GameLogic as gl
+from bge import logic as gl
 from time import sleep
 from random import uniform
 from scripts import rank_display

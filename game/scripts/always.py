@@ -74,7 +74,7 @@ def name_capture():
                 gl.my_name = name + str(int(time()))[-4:]
                 gl.my_name_ok = 1
                 gl.scene = "play"
-                print("Mon nom est {}".format(gl.my_name))  #[:-10]))
+                print("Mon nom est {}".format(gl.my_name[:-4]))
 
         else:
             # nom automatique uniquement avec le temps
@@ -82,4 +82,4 @@ def name_capture():
             gl.my_name = str(int(time()))[-4:]
             gl.my_name_ok = 1
             gl.scene = "play"
-            print("Mon nom est {}".format(gl.my_name))  #[:-10]))
+            print("Mon nom est {}".format(gl.my_name[:-4]))
