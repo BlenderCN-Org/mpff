@@ -40,17 +40,24 @@ sudo apt-get install blender
 ~~~
 
 #### Installation de twisted pour python 3
-##### Dépendances
+
+~~~text
+sudo pip3 install twisted
+~~~
+
+##### ou
 
 ~~~text
 sudo apt-get install python3-dev python3-setuptools
 ~~~
 
-##### Install
-
 Les sources de twisted comprennent les versions pour python2 et python3.
 
-Télécharger les sources à https://github.com/twisted/twisted
+Télécharger les sources à https://github.com/twisted/twisted ou
+
+~~~text
+wget https://github.com/twisted/twisted
+~~~
 
 Dans le dossier, ouvrir un terminal:
 
@@ -58,15 +65,25 @@ Dans le dossier, ouvrir un terminal:
 sudo python3 setup.py install
 ~~~
 
-ou
+##### ou
 
 Dans votre dossier projets, ouvrir un terminal:
-
-~~~text
 git clone https://github.com/twisted/twisted.git
 cd twisted
 sudo python3 setup.py install
 ~~~
+
+##### ou
+
+Sur Debian Jessie, activer les backport en ajoutant à votre sources.list
+
+~~~text
+deb http://ftp.de.debian.org/debian/ jessie-backports main
+deb-src http://ftp.de.debian.org/debian/ jessie-backports main
+~~~
+
+puis installer le paquet python3-twisted
+
 
 ### Lancement du jeu
 
