@@ -68,6 +68,8 @@ sudo python3 setup.py install
 ##### ou
 
 Dans votre dossier projets, ouvrir un terminal:
+
+~~~text
 git clone https://github.com/twisted/twisted.git
 cd twisted
 sudo python3 setup.py install
